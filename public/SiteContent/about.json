@@ -1,0 +1,31 @@
+{
+  "heading": "Since 2016, we're a team of all in all experienced consultations, combine for strategic instant.",
+  "description": "At Optimo, We help businesses navigate complexity unlock to growth achieve lasting transformation with a team of experienced consultations, We can combine for strategic instant.",
+  "image": "/images/team.jpg",
+  "services": [
+    {
+      "icon": "target",
+      "label": "Strategic Planning"
+    },
+    {
+      "icon": "trending-up",
+      "label": "Operational Excellence"
+    },
+    {
+      "icon": "globe",
+      "label": "Market Expansion"
+    },
+    {
+      "icon": "shield",
+      "label": "Risk Management"
+    }
+  ],
+  "stats": {
+    "number": "150+",
+    "label": "Successful Projects Delivered"
+  },
+  "cta": {
+    "label": "Book A Free Call",
+    "link": "/contact"
+  }
+}

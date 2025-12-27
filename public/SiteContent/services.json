@@ -1,0 +1,53 @@
+{
+    "heading": "Driving Growth Through Strategic Excellence",
+    "cta": {
+        "label": "See All Service",
+        "link": "/services"
+    },
+    "services": [
+        {
+            "title": "Wealth Finance",
+            "overview": "Strategic financial planning and wealth management solutions",
+            "image": "/images/wealth-finance.jpg",
+            "description": "Comprehensive financial strategies designed to maximize wealth creation and preservation through intelligent investment planning.",
+            "features": [
+                "Investment Portfolio Management",
+                "Tax Optimization Strategies",
+                "Retirement Planning Solutions"
+            ]
+        },
+        {
+            "title": "Risk Assessment",
+            "overview": "Helping organizations identify vulnerabilities and safeguard assets with proactive, data-driven risk strategies.",
+            "image": "/images/risk-assessment.jpg",
+            "description": "Comprehensive risk evaluation and mitigation strategies to protect your business from potential threats and uncertainties.",
+            "features": [
+                "Comprehensive Risk Audits",
+                "Compliance & Regulatory Alignment",
+                "Crisis Management & Prevention"
+            ]
+        },
+        {
+            "title": "Team Strategy",
+            "overview": "Building high-performance teams through strategic organizational development",
+            "image": "/images/team-strategy.jpg",
+            "description": "Strategic planning and team optimization to enhance collaboration, productivity, and organizational effectiveness.",
+            "features": [
+                "Leadership Development Programs",
+                "Team Performance Analytics",
+                "Organizational Culture Building"
+            ]
+        },
+        {
+            "title": "Growth Planning",
+            "overview": "Scalable growth strategies for sustainable business expansion",
+            "image": "/images/growth-planning.jpg",
+            "description": "Data-driven growth strategies designed to accelerate business expansion and market penetration.",
+            "features": [
+                "Market Analysis & Research",
+                "Scalability Framework Development",
+                "Revenue Optimization Strategies"
+            ]
+        }
+    ]
+}

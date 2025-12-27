@@ -1,0 +1,26 @@
+{
+    "heading": "With a 98% client satisfaction, our strategies have led to $50M+ in revenue",
+    "description": "Our strategic approach is designed to align with your business goals, helping you scale faster",
+    "stats": [
+        {
+            "icon": "folder",
+            "number": "150+",
+            "description": "Over 300+ clients complete high-impact projects."
+        },
+        {
+            "icon": "star",
+            "number": "98%",
+            "description": "Trusted by hundreds of clients who rate our work highly."
+        },
+        {
+            "icon": "users",
+            "number": "50+",
+            "description": "Our ability to adapt and deliver impactful solutions across"
+        },
+        {
+            "icon": "lightbulb",
+            "number": "10+",
+            "description": "Building on years of experience, we provide trusted guidance."
+        }
+    ]
+}

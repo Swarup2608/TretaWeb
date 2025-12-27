@@ -5,6 +5,11 @@
   --foreground: #171717;
 }
 
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,15 +17,344 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header-bg {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12),
+    0 2px 8px 0 rgba(31, 38, 135, 0.08),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+}
+
+.dark .header-bg {
+  background: rgba(17, 24, 39, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35), 0 2px 8px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+.header-text {
+  color: #171717;
+  transition: opacity 0.2s ease;
+}
+
+.dark .header-text {
+  color: #ededed;
+  transition: opacity 0.2s ease;
+}
+
+.header-text:hover {
+  opacity: 0.7;
+}
+
+.header-logo {
+  color: #2563eb;
+}
+
+.dark .header-logo {
+  color: #60a5fa;
+}
+
+.header-logo:hover {
+  color: #1d4ed8;
+}
+
+.dark .header-logo:hover {
+  color: #93c5fd;
+}
+
+.dropdown-bg {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-color: rgba(229, 231, 235, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+.dark .dropdown-bg {
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-color: rgba(55, 65, 81, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-text {
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.dark .dropdown-text {
+  color: #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.dropdown-text:hover {
+  background: rgba(243, 244, 246, 0.8);
+  transform: translateX(4px);
+}
+
+.dark .dropdown-text:hover {
+  background: rgba(31, 41, 55, 0.8);
+  transform: translateX(4px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.hero-text {
+  color: #ffffff;
+}
+
+.hero-text-muted {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.card-bg {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(229, 231, 235, 0.5);
+}
+
+.dark .card-bg {
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(55, 65, 81, 0.5);
+}
+
+.card-text {
+  color: #171717;
+}
+
+.dark .card-text {
+  color: #ededed;
+}
+
+.card-text-muted {
+  color: #6b7280;
+  border-color: #cccccc;
+}
+
+.dark .card-text-muted {
+  color: #9ca3af;
+  border-color: #374151;
+}
+
+.input-bg {
+  background: #ffffff;
+  border-color: #d1d5db;
+  color: #171717;
+}
+
+.dark .input-bg {
+  background: #1f2937;
+  border-color: #374151;
+  color: #ededed;
+}
+
+.input-bg::placeholder {
+  color: #6b7280;
+}
+
+.dark .input-bg::placeholder {
+  color: #9ca3af;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+.hero-bg-animated {
+  animation: zoomIn 20s ease-in-out infinite alternate;
+}
+
+.btn-hero {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.btn-hero:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.dark .btn-hero {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark .btn-hero:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.btn-hero-icon {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.dark .btn-hero-icon {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.service-icon {
+  background: #eff6ff;
+  color: #2563eb;
+  transition: all 0.3s ease;
+}
+
+.dark .service-icon {
+  background: #1e3a8a;
+  color: #93c5fd;
+  transition: all 0.3s ease;
+}
+
+/* Icon Color Variants */
+.icon-blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.dark .icon-blue {
+  background: #1e3a8a;
+  color: #60a5fa;
+}
+
+.icon-purple {
+  background: #e9d5ff;
+  color: #9333ea;
+}
+
+.dark .icon-purple {
+  background: #581c87;
+  color: #c084fc;
+}
+
+.icon-green {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.dark .icon-green {
+  background: #065f46;
+  color: #6ee7b7;
+}
+
+.icon-orange {
+  background: #fed7aa;
+  color: #ea580c;
+}
+
+.dark .icon-orange {
+  background: #7c2d12;
+  color: #fdba74;
+}
+
+/* About Section Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
+.animation-delay-600 {
+  animation-delay: 0.6s;
 }
