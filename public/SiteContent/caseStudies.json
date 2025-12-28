@@ -1,0 +1,39 @@
+{
+  "heading": {
+    "line1": "How We Helped Clients",
+    "line2": "Grow",
+    "line2Italic": "Smarter"
+  },
+  "caseStudies": [
+    {
+      "title": "Streamlining Operations for Scalable Growth",
+      "description": "Helping Vertex Manufacturing cut inefficiencies and achieve sustainable growth through smarter operations.",
+      "image": "/images/case-study-1.jpg",
+      "link": "/case-studies/vertex-manufacturing"
+    },
+    {
+      "title": "Driving Efficiency Through Digital Transformation",
+      "description": "Transforming legacy systems into modern digital solutions for increased productivity.",
+      "image": "/images/case-study-2.jpg",
+      "link": "/case-studies/digital-transformation"
+    },
+    {
+      "title": "Expanding Market Presence with Smarter Sales Strategies",
+      "description": "Helping NovaHealth strengthen national reach with data-driven campaigns and optimized sales operations.",
+      "image": "/images/case-study-3.jpg",
+      "link": "/case-studies/market-expansion"
+    },
+    {
+      "title": "Building Resilient Supply Chains",
+      "description": "Creating robust supply chain solutions that adapt to market changes and disruptions.",
+      "image": "/images/case-study-4.jpg",
+      "link": "/case-studies/supply-chain"
+    },
+    {
+      "title": "Accelerating Innovation Through Agile Practices",
+      "description": "Empowering teams with agile methodologies to drive faster innovation and better outcomes.",
+      "image": "/images/case-study-5.jpg",
+      "link": "/case-studies/agile-innovation"
+    }
+  ]
+}

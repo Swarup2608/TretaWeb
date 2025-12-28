@@ -87,7 +87,7 @@ export default function About() {
     }
 
     return (
-        <section ref={sectionRef} className="py-24 md:py-20 px-4 sm:px-8 lg:px-12">
+        <section ref={sectionRef} className="py-16 md:py-16 px-4 sm:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
                 {/* Heading at Top */}
                 <div className={`mb-12 sm:mb-16 md:max-w-[75%] ${isVisible ? 'animate-slide-up' : 'opacity-0'}`}>
@@ -168,7 +168,7 @@ export default function About() {
                             >
                                 {aboutData.cta.label}
                                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shrink-0 transition-all duration-300 group-hover:rotate-45 group-hover:scale-110">
-                                    <ArrowUpRight className="w-4 h-4 text-blue-600" />
+                                    <ArrowUpRight className="w-4 h-4 text-blue-600 transition-transform duration-300" />
                                 </div>
                             </Link>
                         </div>

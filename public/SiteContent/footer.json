@@ -1,0 +1,51 @@
+{
+    "companyInfo": {
+        "name": "OPTIMO",
+        "tagline": "Transforming your vision into measurable results through innovative solutions and strategic excellence."
+    },
+    "links": {
+        "mainPages": {
+            "title": "Main Pages",
+            "items": [
+                { "label": "Home", "link": "/" },
+                { "label": "Case Study", "link": "/case-studies" },
+                { "label": "Pricing", "link": "/pricing" },
+                { "label": "Blog", "link": "/blog" }
+            ]
+        },
+        "company": {
+            "title": "Company",
+            "items": [
+                { "label": "Contact", "link": "/contact" },
+                { "label": "Services", "link": "/services" },
+                { "label": "About Us", "link": "/about" },
+                { "label": "Pricing", "link": "/pricing" }
+            ]
+        }
+    },
+    "contact": {
+        "title": "Contact",
+        "email": {
+            "label": "Email",
+            "value": "contactinfo@gmail.com"
+        },
+        "address": {
+            "label": "Visit Us",
+            "value": "Los Angeles, CA 90077 United States"
+        },
+        "phone": {
+            "label": "Call us Now",
+            "value": "+99 1234 5478"
+        }
+    },
+    "bottomLinks": [
+        { "label": "Changelog", "link": "/changelog" },
+        { "label": "Terms", "link": "/terms" }
+    ],
+    "copyright": "© 2025. All rights reserved.",
+    "developer": {
+        "text": "Developed by",
+        "name": "Swarup",
+        "link": "https://google.com"
+    }
+}

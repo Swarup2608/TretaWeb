@@ -358,3 +358,505 @@ body {
 .animation-delay-600 {
   animation-delay: 0.6s;
 }
+
+/* Values Section Styles */
+.values-card-bg {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.dark .values-card-bg {
+  background: #1f2937;
+  border: 1px solid #374151;
+}
+
+.values-card-bg:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #2563eb;
+  transform: scale(1.02);
+}
+
+.dark .values-card-bg:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5),
+    0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  border-color: #60a5fa;
+}
+
+.values-icon-bg {
+  background: #2563eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dark .values-icon-bg {
+  background: #60a5fa;
+}
+
+.values-icon-color {
+  color: #ffffff;
+}
+
+.dark .values-icon-color {
+  color: #0a0a0a;
+}
+
+.values-description {
+  color: #6b7280;
+}
+
+.dark .values-description {
+  color: #9ca3af;
+}
+
+/* Case Studies Section Styles - Colors Only */
+.case-study-nav-btn {
+  background: #2563eb;
+}
+
+.case-study-nav-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.case-study-nav-btn svg {
+  color: #ffffff;
+}
+
+/* Case Studies Section Styles - Colors Only */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.case-study-card-bg {
+  background: var(--background);
+}
+
+.case-study-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+  transition: background 0.4s ease;
+  z-index: 1;
+}
+
+.group:hover .case-study-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2));
+}
+
+.case-study-content-bg {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.dark .case-study-content-bg {
+  background: #33333399;
+}
+
+.case-study-title-color {
+  color: var(--foreground);
+}
+
+.dark .case-study-title-color {
+  color: #ededed;
+}
+
+.case-study-description-text {
+  color: #6b7280;
+}
+
+.dark .case-study-description-text {
+  color: #9ca3af;
+}
+
+.case-study-btn-wrapper {
+  background: #2563eb;
+}
+
+.case-study-btn-wrapper:hover {
+  background: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.case-study-btn-text {
+  color: #ffffff;
+}
+
+.case-study-btn-icon svg {
+  color: #2563eb;
+}
+
+/* Case Studies Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.case-study-header-animate {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.case-study-nav-animate {
+  animation: fadeIn 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.case-study-card-animate {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.case-study-card-animate:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.case-study-card-animate:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.case-study-card-animate:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.case-study-card-animate:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.case-study-card-animate:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.case-study-dots-animate {
+  animation: fadeIn 0.8s ease-out 0.6s forwards;
+  opacity: 0;
+}
+
+/* CTA Section Styles - Colors Only */
+.cta-box-bg {
+  background: #2563eb !important;
+}
+
+.cta-icon-bg {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.cta-icon-color {
+  color: #ffffff !important;
+}
+
+.cta-title-color {
+  color: #ffffff !important;
+}
+
+.cta-description-color {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.cta-schedule-border {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.cta-schedule-border:last-child {
+  border-bottom: none !important;
+}
+
+.cta-schedule-text {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.cta-schedule-time {
+  color: #ffffff !important;
+}
+
+.cta-btn-wrapper {
+  background: #ffffff !important;
+}
+
+.cta-btn-wrapper:hover {
+  background: #f8fafc !important;
+}
+
+.cta-btn-text {
+  color: #2563eb !important;
+}
+
+.cta-btn-icon-bg {
+  background: #2563eb !important;
+}
+
+.cta-btn-icon-color {
+  color: #ffffff !important;
+}
+
+/* CTA Animation Keyframes */
+.cta-heading-animate {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.cta-image-animate {
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.cta-box-animate {
+  animation: fadeInUp 0.8s ease-out 0.4s forwards;
+  opacity: 0;
+}
+
+/* FAQ Section Styles - Colors Only */
+.faq-section-bg {
+  background: #f8f9fa !important;
+}
+
+.dark .faq-section-bg {
+  background: #1a1a1a !important;
+}
+
+.faq-heading-color {
+  color: var(--foreground) !important;
+}
+
+.faq-sidebar-bg {
+  background: #ffffff !important;
+}
+
+.dark .faq-sidebar-bg {
+  background: #262626 !important;
+}
+
+.faq-sidebar-title {
+  color: #171717 !important;
+}
+
+.dark .faq-sidebar-title {
+  color: #ededed !important;
+}
+
+.faq-sidebar-description {
+  color: #6b7280 !important;
+}
+
+.dark .faq-sidebar-description {
+  color: #9ca3af !important;
+}
+
+.faq-cta-btn {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.faq-cta-btn:hover {
+  background: #1d4ed8 !important;
+}
+
+.faq-cta-icon-bg {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.faq-cta-icon {
+  color: #ffffff !important;
+}
+
+.faq-item-bg {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.dark .faq-item-bg {
+  background: #262626 !important;
+  border: 1px solid #404040 !important;
+}
+
+.faq-question-text {
+  color: #171717 !important;
+}
+
+.dark .faq-question-text {
+  color: #ededed !important;
+}
+
+.faq-answer-text {
+  color: #6b7280 !important;
+}
+
+.dark .faq-answer-text {
+  color: #9ca3af !important;
+}
+
+.faq-icon-bg {
+  background: #2563eb !important;
+}
+
+.faq-icon-color {
+  color: #ffffff !important;
+}
+
+/* FAQ Animation Keyframes */
+.faq-heading-animate {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.faq-sidebar-animate {
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.faq-items-animate {
+  animation: fadeInUp 0.8s ease-out 0.4s forwards;
+  opacity: 0;
+}
+
+/* Footer Section Styles - Colors Only */
+.footer-bg {
+  background: #ffffff !important;
+}
+
+.dark .footer-bg {
+  background: #171717 !important;
+}
+
+.footer-heading {
+  color: #171717 !important;
+}
+
+.dark .footer-heading {
+  color: #ededed !important;
+}
+
+.footer-tagline {
+  color: #6b7280 !important;
+}
+
+.dark .footer-tagline {
+  color: #9ca3af !important;
+}
+
+.footer-input {
+  background: #f3f4f6 !important;
+  color: #171717 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.dark .footer-input {
+  background: #262626 !important;
+  color: #ededed !important;
+  border: 1px solid #404040 !important;
+}
+
+.footer-input::placeholder {
+  color: #9ca3af !important;
+}
+
+.dark .footer-input::placeholder {
+  color: #6b7280 !important;
+}
+
+.footer-subscribe-btn {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.footer- .dark .footer-link {
+  color: #d1d5db !important;
+}
+
+.footer-contact-bg {
+  background: #f8f9fa !important;
+}
+
+.dark .footer-contact-bg {
+  background: #0a0a0a !important;
+}
+
+.footer-contact-label {
+  color: #6b7280 !important;
+}
+
+.dark .footer-contact-label {
+  color: #9ca3af !important;
+}
+
+.footer-contact-value {
+  color: #171717 !important;
+}
+
+.dark .footer-contact-value {
+  color: #ededed !important;
+}
+
+.footer-bottom-bg {
+  background: #2563eb !important;
+}
+
+.footer-bottom-logo {
+  color: #ffffff !important;
+}
+
+.footer-social-link {
+  color: #ffffff !important;
+}
+
+.footer-bottom-link {
+  color: #ffffff !important;
+}
+
+.footer-bottom-separator {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.footer-copyright {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Footer Copyright Bar */
+.footer-copyright-bg {
+  background: #0a0a0a !important;
+}
+
+.dark .footer-copyright-bg {
+  background: #000000 !important;
+}
+
+.footer-copyright-text {
+  color: #9ca3af !important;
+}
+
+.dark .footer-copyright-text {
+  color: #6b7280 !important;
+}
+
+.footer-developer-text {
+  color: #9ca3af !important;
+}
+
+.dark .footer-developer-text {
+  color: #6b7280 !important;
+}
+
+.footer-developer-link {
+  color: #2563eb !important;
+  font-weight: 600 !important;
+}
+
+.dark .footer-developer-link {
+  color: #60a5fa !important;
+}

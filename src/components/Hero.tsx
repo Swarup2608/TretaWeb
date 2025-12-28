@@ -48,7 +48,7 @@ export default function Hero() {
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 bg-linear-to-br from-black/60 via-black/50 to-black/60 z-1 transition-all duration-700"></div>
 
-            <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col justify-end pb-32 lg:pb-32 pt-40 min-h-screen">
+            <div className="relative z-10 max-w-full mx-auto w-full flex flex-col justify-center lg:pb-32 pt-40 min-h-screen">
                 {/* Main Content */}
                 <div className={`text-left max-w-3xl mb-8 lg:mb-20 ${isVisible ? 'animate-slide-up' : 'opacity-0'}`}>
                     <h1 className={`text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight hero-text transition-all duration-700 ${isVisible ? 'animate-slide-up animation-delay-200' : 'opacity-0'}`}>
@@ -65,7 +65,7 @@ export default function Hero() {
                         className={`inline-flex items-center gap-0 btn-hero rounded-full backdrop-blur-xl backdrop-saturate-150 transition-all duration-500 font-medium text-base sm:text-lg border hover:scale-105 hover:shadow-2xl hover:-translate-y-1 group ${isVisible ? 'animate-slide-up animation-delay-600' : 'opacity-0'}`}
                     >
                         <span className="px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 group-hover:pr-2">{heroData.cta.label}</span>
-                        <div className="btn-hero-icon p-3 sm:p-4 rounded-full transition-all duration-300 group-hover:scale-110 group-hover:rotate-45">
+                        <div className="btn-hero-icon p-3 sm:p-4 rounded-full transition-all duration-300  group-hover:rotate-45 mr-2">
                             <svg
                                 className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300"
                                 fill="none"

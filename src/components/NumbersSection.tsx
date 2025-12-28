@@ -82,7 +82,7 @@ export default function NumbersSection() {
     }
 
     return (
-        <section ref={sectionRef} className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
+        <section ref={sectionRef} className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className={`text-center mb-6 sm:mb-8 ${isVisible ? 'animate-slide-up' : 'opacity-0'}`}>

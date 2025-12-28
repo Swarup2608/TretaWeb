@@ -1,0 +1,39 @@
+{
+  "heading": {
+    "line1": "Our Proven Process to",
+    "line2": "Drive Your",
+    "line2Italic": "Success"
+  },
+  "values": [
+    {
+      "iconName": "MessageCircle",
+      "title": "Discover & Diagnose",
+      "description": "Uncover challenges, opportunities, and root causes with clarity."
+    },
+    {
+      "iconName": "Settings",
+      "title": "Strategize & Plan",
+      "description": "Build actionable roadmaps aligned with your business goals."
+    },
+    {
+      "iconName": "Rocket",
+      "title": "Execute & Optimize",
+      "description": "Build actionable roadmaps aligned with your business goals."
+    },
+    {
+      "iconName": "Target",
+      "title": "Measure & Track",
+      "description": "Monitor key metrics and performance indicators to ensure success."
+    },
+    {
+      "iconName": "Users",
+      "title": "Collaborate & Engage",
+      "description": "Foster teamwork and stakeholder alignment throughout the journey."
+    },
+    {
+      "iconName": "TrendingUp",
+      "title": "Scale & Grow",
+      "description": "Expand your success with sustainable growth strategies and best practices."
+    }
+  ]
+}

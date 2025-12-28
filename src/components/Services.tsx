@@ -39,7 +39,7 @@ export default function Services() {
     };
 
     return (
-        <section className="relative py-16 lg:py-24 overflow-hidden">
+        <section className="relative py-12 lg:py-20 overflow-hidden">
             {/* Header */}
             <div
                 className={`max-w-7xl mx-auto px-6 mb-12 lg:mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -112,7 +112,7 @@ export default function Services() {
                                         >
                                             Explore Service
                                             <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shrink-0 transition-all duration-300 group-hover:rotate-45 group-hover:scale-110">
-                                                <ArrowUpRight className="w-4 h-4 text-blue-600" />
+                                                <ArrowUpRight className="w-4 h-4 text-blue-600 transition-transform duration-300 " />
                                             </div>
                                         </a>
                                     </div>

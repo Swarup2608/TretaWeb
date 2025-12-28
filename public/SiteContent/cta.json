@@ -1,0 +1,30 @@
+{
+    "heading": {
+        "line1": "Expert Solutions for",
+        "line2": "Complex",
+        "line2Italic": "Challenges"
+    },
+    "image": "/images/cta-image.jpg",
+    "box": {
+        "title": "Schedule a Consultation",
+        "description": "Our team is available during the hours below and happy to accommodate custom appointments as needed.",
+        "schedule": [
+            {
+                "days": "Monday- Thursday",
+                "time": "08:00-18:00"
+            },
+            {
+                "days": "Friday",
+                "time": "09:00-17:00"
+            },
+            {
+                "days": "Saturday & Sunday",
+                "time": "08:30-19:30"
+            }
+        ],
+        "cta": {
+            "label": "Get Appointment",
+            "link": "/contact"
+        }
+    }
+}

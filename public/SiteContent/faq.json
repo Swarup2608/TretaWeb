@@ -1,0 +1,36 @@
+{
+    "heading": {
+        "line1": "Friendly Asked",
+        "line2": "Questions."
+    },
+    "sidebar": {
+        "title": "Still have a question?",
+        "description": "Our team is ready to assist you with anything you need.",
+        "cta": {
+            "label": "Make A Call",
+            "link": "/contact"
+        }
+    },
+    "faqs": [
+        {
+            "question": "What industries does Optimo serve?",
+            "answer": "We serve a wide range of industries including technology, healthcare, finance, retail, manufacturing, and more. Our solutions are customized to meet the specific needs of each industry."
+        },
+        {
+            "question": "How do I know which service is right for my business?",
+            "answer": "It starts with a conversation. During an initial consultation, we'll learn about your goals, challenges, and opportunities, then recommend services—whether that's growth planning, talent strategy, or performance optimization—best aligned to your needs."
+        },
+        {
+            "question": "Do you offer customized solutions or standard frameworks?",
+            "answer": "We offer both customized solutions tailored to your specific business needs and proven standard frameworks that can be adapted to your requirements. Our approach is flexible and designed to deliver the best results for your unique situation."
+        },
+        {
+            "question": "How do you measure success with clients?",
+            "answer": "Success is measured through key performance indicators (KPIs) that we establish together at the project outset. These may include metrics like revenue growth, cost reduction, efficiency improvements, customer satisfaction scores, and other business-specific goals."
+        },
+        {
+            "question": "How can I get started with Optimo?",
+            "answer": "Getting started is easy! Simply reach out through our contact form, schedule a consultation call, or send us an email. We'll arrange an initial meeting to discuss your needs and outline how we can help your business grow."
+        }
+    ]
+}
