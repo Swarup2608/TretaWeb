@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, readdir, unlink } from 'fs/promises';
 import path from 'path';
 import { verifyAuth } from '@/utils/auth';
+import { existsSync } from 'fs';
 
 // Allowed sections for image uploads
-const ALLOWED_SECTIONS = ['hero', 'about', 'services', 'caseStudies', 'footer', 'header'];
+const ALLOWED_SECTIONS = ['hero', 'about', 'services', 'caseStudies', 'footer', 'header', 'favicon'];
 
 export async function POST(request: NextRequest) {
     try {
@@ -41,7 +42,13 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate file type
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+        let allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+        
+        // For favicon, also allow svg and ico
+        if (sectionName === 'favicon') {
+            allowedTypes = ['image/png', 'image/svg+xml', 'image/x-icon', 'image/vnd.microsoft.icon'];
+        }
+        
         if (!allowedTypes.includes(file.type)) {
             return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
         }
@@ -64,11 +71,34 @@ export async function POST(request: NextRequest) {
         // Create directory if it doesn't exist
         await mkdir(uploadDir, { recursive: true });
 
-        // Generate unique filename (sanitized)
-        const timestamp = Date.now();
+        // For favicon, delete all existing favicon files first
+        if (sectionName === 'favicon') {
+            try {
+                const files = await readdir(uploadDir);
+                for (const file of files) {
+                    if (file.startsWith('favicon.')) {
+                        await unlink(path.join(uploadDir, file));
+                    }
+                }
+            } catch (err) {
+                // Directory might not exist yet, ignore
+            }
+        }
+
+        // Generate filename
         const extension = path.extname(file.name).toLowerCase();
-        const sanitizedName = path.basename(file.name, extension).replace(/[^a-z0-9-_]/gi, '_');
-        const filename = `${timestamp}_${sanitizedName}${extension}`;
+        let filename: string;
+        
+        if (sectionName === 'favicon') {
+            // For favicon, use fixed name with extension
+            filename = `favicon${extension}`;
+        } else {
+            // For other sections, use timestamp and sanitized name
+            const timestamp = Date.now();
+            const sanitizedName = path.basename(file.name, extension).replace(/[^a-z0-9-_]/gi, '_');
+            filename = `${timestamp}_${sanitizedName}${extension}`;
+        }
+        
         const filepath = path.join(uploadDir, filename);
 
         // Final path validation

@@ -8,6 +8,7 @@ interface MetaData {
         description: string;
         keywords: string;
         themeColor: string;
+        favicon?: string;
     };
     colors: {
         primaryLight: string;

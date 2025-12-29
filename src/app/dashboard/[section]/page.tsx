@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useMeta } from '@/context/MetaContext';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 interface Section {
     name: string;
@@ -38,6 +39,12 @@ export default function SectionPage() {
     const [sectionData, setSectionData] = useState<any>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [showDownloadModal, setShowDownloadModal] = useState(false);
+    const [selectedFormat, setSelectedFormat] = useState<'csv' | 'excel' | 'json' | null>(null);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [showSaveModal, setShowSaveModal] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [pendingUpload, setPendingUpload] = useState<{ file: File; path: string } | null>(null);
 
     const currentSection = sections.find(s => s.name.toLowerCase().replace(' ', '-') === sectionName);
 
@@ -84,8 +91,9 @@ export default function SectionPage() {
                 const result = await response.json();
 
                 if (result.success) {
-                    alert('Data saved successfully!');
+                    toast.success('Data saved successfully!');
                     setIsEditing(false);
+                    setShowSaveModal(false);
                     // Reload the section data to reflect changes
                     loadSectionData();
                     // If meta was updated, update the context
@@ -93,11 +101,11 @@ export default function SectionPage() {
                         updateMeta(sectionData);
                     }
                 } else {
-                    alert('Failed to save data: ' + result.error);
+                    toast.error('Failed to save data: ' + result.error);
                 }
             } catch (error) {
                 console.error('Error saving data:', error);
-                alert('Failed to save data');
+                toast.error('Failed to save data');
             }
         }
     };
@@ -242,9 +250,22 @@ export default function SectionPage() {
     };
 
     const handleImageUpload = async (file: File, path: string) => {
+        setPendingUpload({ file, path });
+        setShowUploadModal(true);
+    };
+
+    const confirmImageUpload = async () => {
+        if (!pendingUpload) return;
+
+        const { file, path } = pendingUpload;
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('sectionName', currentSection!.name.toLowerCase().replace(' ', '-'));
+
+        // Check if this is a favicon upload
+        const isFavicon = path.includes('favicon');
+        const sectionNameForUpload = isFavicon ? 'favicon' : currentSection!.name.toLowerCase().replace(' ', '-');
+
+        formData.append('sectionName', sectionNameForUpload);
 
         try {
             const response = await fetch('/api/upload', {
@@ -268,13 +289,46 @@ export default function SectionPage() {
                 } else {
                     handleInputChange(path, result.path);
                 }
-                alert('Image uploaded successfully!');
+                toast.success('Image uploaded successfully!');
+                setShowUploadModal(false);
+                setPendingUpload(null);
             } else {
-                alert('Upload failed: ' + result.error);
+                toast.error('Upload failed: ' + result.error);
             }
         } catch (error) {
             console.error('Upload error:', error);
-            alert('Upload failed');
+            toast.error('Upload failed');
+        }
+    };
+
+    const handleDownload = async (format: 'csv' | 'excel' | 'json') => {
+        setSelectedFormat(format);
+        setShowDownloadModal(true);
+    };
+
+    const executeDownload = async (includeImages: boolean) => {
+        try {
+            const sectionFile = currentSection!.file.replace('.json', '');
+            const response = await fetch(`/api/download-section?section=${sectionFile}&format=${selectedFormat}&includeImages=${includeImages}`);
+
+            if (!response.ok) {
+                throw new Error('Download failed');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const extension = includeImages ? 'zip' : (selectedFormat === 'excel' ? 'xlsx' : selectedFormat);
+            a.download = `${sectionFile}_${selectedFormat}.${extension}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            setShowDownloadModal(false);
+        } catch (error) {
+            console.error('Download error:', error);
+            toast.error('Download failed');
         }
     };
 
@@ -346,40 +400,65 @@ export default function SectionPage() {
         }
 
         // Check if this is an image field
-        if (typeof value === 'string' && (value.startsWith('/images/') || key.toLowerCase().includes('image') || key.toLowerCase().includes('background'))) {
+        if (typeof value === 'string' && (value.startsWith('/images/') || key.toLowerCase().includes('image') || key.toLowerCase().includes('background') || key.toLowerCase() === 'favicon')) {
+            // Determine accept attribute based on field name
+            const acceptAttr = key.toLowerCase() === 'favicon' ? 'image/png,image/svg+xml,image/x-icon,.ico,.svg,.png' : 'image/*';
+            const isFavicon = key.toLowerCase() === 'favicon';
+
             return (
-                <div key={path} className="mb-4">
-                    <label className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                <div key={path} className="mb-6">
+                    <label className={`block text-sm font-semibold mb-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
                         {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                        {isFavicon && (
+                            <span className={`text-xs ml-2 font-normal ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                (PNG, SVG, or ICO)
+                            </span>
+                        )}
                     </label>
-                    {value && (
-                        <div className="mb-2">
-                            <img
-                                src={value}
-                                alt="Current"
-                                className="max-w-full h-32 object-cover rounded border"
-                            />
+                    <div className={`${isFavicon ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : ''}`}>
+                        {value && (
+                            <div className={`${isFavicon ? 'order-1' : 'mb-3'}`}>
+                                <div className={`p-3 border-2 rounded-lg ${theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
+                                    <p className={`text-xs font-medium mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Current {isFavicon ? 'Favicon' : 'Image'}</p>
+                                    <img
+                                        src={value}
+                                        alt="Current"
+                                        className={`${isFavicon ? 'w-16 h-16 object-contain' : 'w-full h-32 object-cover'} rounded border ${theme === 'dark' ? 'border-gray-600 bg-white' : 'border-gray-300'}`}
+                                    />
+                                    <p className={`text-xs mt-2 truncate ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{value}</p>
+                                </div>
+                            </div>
+                        )}
+                        <div className={`space-y-3 ${isFavicon ? 'order-2' : ''}`}>
+                            <div>
+                                <label className={`block text-xs font-medium mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Upload File
+                                </label>
+                                <input
+                                    type="file"
+                                    accept={acceptAttr}
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            handleImageUpload(file, path);
+                                        }
+                                    }}
+                                    className={`w-full px-3 py-2 border rounded-md text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700' : 'bg-white border-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700'}`}
+                                />
+                            </div>
+                            <div>
+                                <label className={`block text-xs font-medium mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Or Enter URL
+                                </label>
+                                <input
+                                    type="text"
+                                    value={value}
+                                    onChange={(e) => handleInputChange(path, e.target.value)}
+                                    placeholder="/images/..."
+                                    className={`w-full px-3 py-2 border rounded-md text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'}`}
+                                />
+                            </div>
                         </div>
-                    )}
-                    <div className="flex gap-2">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                    handleImageUpload(file, path);
-                                }
-                            }}
-                            className={`flex-1 px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
-                        />
-                        <input
-                            type="text"
-                            value={value}
-                            onChange={(e) => handleInputChange(path, e.target.value)}
-                            placeholder="Or enter image URL"
-                            className={`flex-1 px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
-                        />
                     </div>
                 </div>
             );
@@ -432,7 +511,7 @@ export default function SectionPage() {
                                                     removeArrayItem(path, index);
                                                 }
                                             }}
-                                            className="text-red-600 hover:text-red-800 ml-2 flex-shrink-0"
+                                            className="text-red-600 hover:text-red-800 ml-2 shrink-0"
                                         >
                                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -514,6 +593,83 @@ export default function SectionPage() {
 
     return (
         <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+            {/* Download Modal */}
+            {showDownloadModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className={`max-w-md w-full rounded-xl shadow-2xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+                        <div className="p-6">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className={`p-3 rounded-full ${theme === 'dark' ? 'bg-indigo-900/50' : 'bg-indigo-100'}`}>
+                                    <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-semibold">Download Options</h3>
+                                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Choose how to export your data
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3 mb-6">
+                                <button
+                                    onClick={() => executeDownload(true)}
+                                    className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left ${theme === 'dark'
+                                        ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 border-indigo-500 text-white shadow-lg hover:shadow-xl'
+                                        : 'bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 border-indigo-400 text-white shadow-md hover:shadow-lg'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-white/20 rounded-lg">
+                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div className="font-semibold">With Images</div>
+                                            <div className="text-sm opacity-90">Download as ZIP with all images included</div>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button
+                                    onClick={() => executeDownload(false)}
+                                    className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left ${theme === 'dark'
+                                        ? 'bg-gray-700 hover:bg-gray-600 border-gray-600 text-white'
+                                        : 'bg-gray-100 hover:bg-gray-200 border-gray-300 text-gray-900'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-gray-600' : 'bg-gray-200'}`}>
+                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div className="font-semibold">Data Only</div>
+                                            <div className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                Download {selectedFormat?.toUpperCase()} file without images
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <button
+                                onClick={() => setShowDownloadModal(false)}
+                                className={`w-full px-4 py-2 rounded-lg border transition-colors ${theme === 'dark'
+                                    ? 'border-gray-600 hover:bg-gray-700 text-gray-300'
+                                    : 'border-gray-300 hover:bg-gray-50 text-gray-700'
+                                    }`}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <header className={`shadow-sm ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -527,7 +683,7 @@ export default function SectionPage() {
                         <div className="flex items-center gap-4">
                             <span>Welcome, {user?.name}</span>
                             <button
-                                onClick={logout}
+                                onClick={() => setShowLogoutModal(true)}
                                 className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
                             >
                                 Logout
@@ -551,7 +707,7 @@ export default function SectionPage() {
                                 </div>
                                 <div className="mt-6 flex gap-2">
                                     <button
-                                        onClick={saveSectionData}
+                                        onClick={() => setShowSaveModal(true)}
                                         className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
                                     >
                                         Save Changes
@@ -620,6 +776,88 @@ export default function SectionPage() {
                                     {currentSection.description}
                                 </p>
                             </div>
+
+                            {/* Download Section */}
+                            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <svg className="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                        Export Section Data
+                                    </label>
+                                </div>
+                                <div className="space-y-2">
+                                    <button
+                                        onClick={() => handleDownload('csv')}
+                                        className="group w-full flex items-center cursor-pointer justify-between px-4 py-3 rounded-lg border-2 border-[#f7ae31] text-white shadow-md hover:shadow-lg transition-all duration-200"
+                                        style={{ background: 'linear-gradient(to left, #f7ae31, #fb6220)' }}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <div className="text-left">
+                                                <div className="font-semibold text-sm">CSV Format</div>
+                                                <div className="text-xs opacity-90">Spreadsheet compatible</div>
+                                            </div>
+                                        </div>
+                                        <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleDownload('excel')}
+                                        className="group w-full flex items-center cursor-pointer justify-between px-4 py-3 rounded-lg border-2 border-[#a0db5e] text-white shadow-md hover:shadow-lg transition-all duration-200"
+                                        style={{ background: 'linear-gradient(to left, #a0db5e, #68b63a)' }}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <div className="text-left">
+                                                <div className="font-semibold text-sm">Excel Format</div>
+                                                <div className="text-xs opacity-90">XLSX workbook</div>
+                                            </div>
+                                        </div>
+                                        <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleDownload('json')}
+                                        className="group w-full flex items-center cursor-pointer justify-between px-4 py-3 rounded-lg border-2 border-[#69a6fb] text-white shadow-md hover:shadow-lg transition-all duration-200"
+                                        style={{ background: 'linear-gradient(to left, #69a6fb, #1e5ae4)' }}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <div className="text-left">
+                                                <div className="font-semibold text-sm">JSON Format</div>
+                                                <div className="text-xs opacity-90">Raw structured data</div>
+                                            </div>
+                                        </div>
+                                        <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p className="mt-3 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                                    </svg>
+                                    All formats include associated images in a ZIP archive
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -634,6 +872,115 @@ export default function SectionPage() {
                     </Link>
                 </div>
             </div>
+
+            {/* Logout Confirmation Modal */}
+            {showLogoutModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    <div
+                        className="absolute inset-0"
+                        onClick={() => setShowLogoutModal(false)}
+                    />
+                    <div className={`relative z-10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4 ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-full">
+                                <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-semibold">Confirm Logout</h3>
+                        </div>
+                        <p className={`mb-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                            Are you sure you want to logout?
+                        </p>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                onClick={() => setShowLogoutModal(false)}
+                                className={`px-4 py-2 rounded-md transition-colors ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={logout}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Save Changes Confirmation Modal */}
+            {showSaveModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                    <div className={`relative z-10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4 ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-full">
+                                <svg className="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-semibold">Save Changes</h3>
+                        </div>
+                        <p className={`mb-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                            Are you sure you want to save these changes? This will update the section data.
+                        </p>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                onClick={() => setShowSaveModal(false)}
+                                className={`px-4 py-2 rounded-md transition-colors ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={saveSectionData}
+                                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Image Upload Confirmation Modal */}
+            {showUploadModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                    <div className={`relative z-10 p-6 rounded-lg shadow-xl max-w-md w-full mx-4 ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full">
+                                <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-semibold">Upload Image</h3>
+                        </div>
+                        <p className={`mb-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                            {pendingUpload?.path.includes('favicon')
+                                ? 'Are you sure you want to upload this favicon? The old favicon will be deleted.'
+                                : 'Are you sure you want to upload this image? The old image will be deleted if it exists.'
+                            }
+                        </p>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                onClick={() => {
+                                    setShowUploadModal(false);
+                                    setPendingUpload(null);
+                                }}
+                                className={`px-4 py-2 rounded-md transition-colors ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmImageUpload}
+                                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                            >
+                                Upload
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
