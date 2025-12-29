@@ -1,0 +1,17 @@
+{
+  "seo": {
+    "title": "Treta - Business Consulting",
+    "description": "Expert strategic consulting to drive sustainable growth, operational innovation, and lasting business transformation across industries and markets.",
+    "keywords": "business consulting, strategy, growth, innovation, transformation",
+    "themeColor": "#f7963b"
+  },
+  "colors": {
+    "primaryLight": "#f07407",
+    "primaryDark": "#fba660",
+    "secondaryLight": "#10B981",
+    "secondaryDark": "#34D399"
+  },
+  "fonts": {
+    "fontFamily": "Geist"
+  }
+}

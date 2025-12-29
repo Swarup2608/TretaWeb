@@ -21,6 +21,7 @@ interface HeroData {
 export default function Hero() {
     const [heroData, setHeroData] = useState<HeroData | null>(null);
     const [isVisible, setIsVisible] = useState(false);
+    const [isZoomed, setIsZoomed] = useState(false);
 
     useEffect(() => {
         fetch('/SiteContent/hero.json')
@@ -41,9 +42,35 @@ export default function Hero() {
         <section className="relative min-h-screen flex flex-col px-4 sm:px-6 lg:px-8 ">
             {/* Animated Background Image */}
             <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat hero-bg-animated"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat hero-bg-animated cursor-zoom-in"
                 style={{ backgroundImage: `url(${heroData.backgroundImage})` }}
+                onClick={() => setIsZoomed(true)}
             ></div>
+
+            {/* Zoom Overlay */}
+            {isZoomed && (
+                <div
+                    className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center cursor-zoom-out animate-fade-in"
+                    onClick={() => setIsZoomed(false)}
+                >
+                    <div className="relative max-w-7xl max-h-[90vh] w-full h-full p-4 sm:p-8">
+                        <button
+                            onClick={() => setIsZoomed(false)}
+                            className="absolute top-4 right-4 sm:top-8 sm:right-8 z-10 p-2 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors"
+                            aria-label="Close"
+                        >
+                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <img
+                            src={heroData.backgroundImage}
+                            alt="Hero Background"
+                            className="w-full h-full object-contain animate-scale-in"
+                        />
+                    </div>
+                </div>
+            )}
 
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 bg-linear-to-br from-black/60 via-black/50 to-black/60 z-1 transition-all duration-700"></div>

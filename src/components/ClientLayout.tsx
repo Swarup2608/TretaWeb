@@ -1,18 +1,21 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { usePathname } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export function ClientLayout({ children }: { children: ReactNode }) {
+    const pathname = usePathname();
+    const isDashboardOrAdmin = pathname.startsWith('/dashboard') || pathname === '/login';
+
     return (
-        <ThemeProvider>
-            <Header />
+        <>
+            {!isDashboardOrAdmin && <Header />}
             <main className="">
                 {children}
             </main>
             <Footer />
-        </ThemeProvider>
+        </>
     );
 }

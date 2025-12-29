@@ -75,11 +75,11 @@ export default function Services() {
                                     onClick={() => handleAccordionClick(index)}
                                     className="w-full text-left py-6 lg:py-8 flex items-start cursor-pointer gap-4 lg:gap-6 hover:opacity-80 transition-all duration-300 group"
                                 >
-                                    <span className="text-lg lg:text-xl font-bold card-text-muted shrink-0 transition-colors duration-300 group-hover:header-logo">
+                                    <span className="text-lg lg:text-xl font-bold card-text-muted shrink-0 transition-colors duration-300 group-hover:text-primary">
                                         [0{index + 1}]
                                     </span>
                                     <div className="flex-1">
-                                        <h3 className="text-2xl lg:text-3xl font-bold card-text transition-colors duration-300 group-hover:header-logo">
+                                        <h3 className="text-2xl lg:text-3xl font-bold card-text transition-colors duration-300 group-hover:text-primary">
                                             {service.title}
                                         </h3>
                                         {activeIndex === index && (
@@ -89,7 +89,7 @@ export default function Services() {
                                         )}
                                     </div>
                                     <ChevronDown
-                                        className={`w-5 h-5 lg:w-6 lg:h-6 card-text-muted shrink-0 transition-all duration-300 group-hover:header-logo ${activeIndex === index ? "rotate-180" : ""
+                                        className={`w-5 h-5 lg:w-6 lg:h-6 card-text-muted shrink-0 transition-all duration-300 group-hover:text-primary ${activeIndex === index ? "rotate-180" : ""
                                             }`}
                                     />
                                 </button>
@@ -108,11 +108,11 @@ export default function Services() {
 
                                         <a
                                             href="/services"
-                                            className="inline-flex items-center justify-center gap-3 btn-primary px-6 sm:px-8 py-3 sm:py-3.5 rounded-full transition-all duration-300 font-medium text-base shadow-lg hover:shadow-2xl hover:scale-105 hover:-translate-y-1 group"
+                                            className="inline-flex items-center gap-3 rounded-full w-fit transition-all duration-300 hover:scale-105 hover:shadow-xl group btn-primary px-6 py-3.5 font-semibold text-base"
                                         >
                                             Explore Service
-                                            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shrink-0 transition-all duration-300 group-hover:rotate-45 group-hover:scale-110">
-                                                <ArrowUpRight className="w-4 h-4 text-blue-600 transition-transform duration-300 " />
+                                            <div className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 faq-cta-icon-bg">
+                                                <ArrowUpRight className="w-4 h-4 faq-cta-icon" />
                                             </div>
                                         </a>
                                     </div>

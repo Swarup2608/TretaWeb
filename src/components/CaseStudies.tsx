@@ -134,14 +134,12 @@ export default function CaseStudies() {
                                             {/* Button - Always visible on mobile, visible on hover for desktop */}
                                             <Link
                                                 href={study.link}
-                                                className="inline-flex items-center gap-0 rounded-full w-fit shrink-0 sm:opacity-0 sm:max-h-0 sm:overflow-hidden sm:translate-y-5 group-hover:sm:opacity-100 group-hover:sm:max-h-25 group-hover:sm:translate-y-0 transition-all duration-400 ease-out case-study-btn-wrapper group/button"
+                                                className="inline-flex items-center gap-3 rounded-full w-fit shrink-0 sm:opacity-0 sm:max-h-0 sm:overflow-hidden sm:translate-y-5 group-hover:sm:opacity-100 group-hover:sm:max-h-25 group-hover:sm:translate-y-0 transition-all duration-400 ease-out case-study-btn-wrapper group/button px-6 py-3.5 font-semibold text-base"
                                             >
-                                                <span className="px-7 py-3.5 font-semibold text-[0.9375rem] sm:text-base case-study-btn-text">
-                                                    View Case Study
-                                                </span>
-                                                <span className="w-10 h-10 sm:w-11 sm:h-11 mr-2 rounded-full bg-white flex items-center group-hover/button:rotate-45 justify-center case-study-btn-icon">
-                                                    <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300" />
-                                                </span>
+                                                View Case Study
+                                                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover/button:rotate-45 faq-cta-icon-bg">
+                                                    <ArrowUpRight className="w-4 h-4 faq-cta-icon" />
+                                                </div>
                                             </Link>
                                         </div>
                                     </div>
@@ -169,7 +167,7 @@ export default function CaseStudies() {
                                     key={index}
                                     onClick={() => setCurrentIndex(index)}
                                     className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                                        ? 'bg-[#2563eb] w-8'
+                                        ? 'bg-primary w-8'
                                         : 'bg-[#d1d5db] w-2'
                                         }`}
                                     aria-label={`Go to slide ${index + 1}`}

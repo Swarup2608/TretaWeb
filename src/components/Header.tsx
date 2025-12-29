@@ -140,7 +140,7 @@ export default function Header() {
                             </button>
                             <Link
                                 href={headerData.cta.link}
-                                className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition-colors font-medium"
+                                className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:opacity-90 transition-all duration-300 font-medium"
                             >
                                 {headerData.cta.label}
                                 <svg

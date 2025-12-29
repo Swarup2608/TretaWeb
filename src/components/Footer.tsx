@@ -169,7 +169,7 @@ export default function Footer() {
                                     href={footerData.developer.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="footer-developer-link hover:opacity-70 transition-opacity"
+                                    className="footer-developer-link text-primary hover:opacity-70 transition-opacity"
                                 >
                                     {footerData.developer.name}
                                 </a>
