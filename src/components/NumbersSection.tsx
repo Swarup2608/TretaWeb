@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Folder, Star, Users, Lightbulb } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 
 interface Stat {
     icon: string;
@@ -14,13 +14,6 @@ interface NumbersData {
     description: string;
     stats: Stat[];
 }
-
-const iconMap = {
-    folder: Folder,
-    star: Star,
-    users: Users,
-    lightbulb: Lightbulb,
-};
 
 const iconColorClasses = ['icon-blue', 'icon-purple', 'icon-green', 'icon-orange'];
 const hoverTextClasses = ['hover:text-blue-600 dark:hover:text-blue-400', 'hover:text-purple-600 dark:hover:text-purple-400', 'hover:text-green-600 dark:hover:text-green-400', 'hover:text-orange-600 dark:hover:text-orange-400'];
@@ -101,11 +94,18 @@ export default function NumbersSection() {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                     {numbersData.stats.map((stat, index) => {
-                        const IconComponent = iconMap[stat.icon as keyof typeof iconMap];
+                        // Capitalize first letter for case-insensitive icon lookup
+                        const iconName = stat.icon.charAt(0).toUpperCase() + stat.icon.slice(1);
+                        const IconComponent = (LucideIcons as any)[iconName];
                         const suffix = stat.number.replace(/\d/g, '');
                         const displayNumber = animatedNumbers[index] || 0;
                         const colorClass = iconColorClasses[index];
                         const hoverClass = hoverTextClasses[index];
+
+                        // Debug: log if icon is not found
+                        if (!IconComponent) {
+                            console.warn(`Icon not found: ${stat.icon} (tried: ${iconName})`);
+                        }
 
                         return (
                             <div
@@ -117,7 +117,11 @@ export default function NumbersSection() {
                                 {/* Icon */}
                                 <div className="mb-6">
                                     <div className={`${colorClass} w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110`}>
-                                        <IconComponent className="w-7 h-7" />
+                                        {IconComponent ? (
+                                            <IconComponent className="w-7 h-7" />
+                                        ) : (
+                                            <div className="w-7 h-7 text-red-500 flex items-center justify-center font-bold">?</div>
+                                        )}
                                     </div>
                                 </div>
 

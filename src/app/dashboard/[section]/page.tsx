@@ -7,6 +7,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { useMeta } from '@/context/MetaContext';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import * as LucideIcons from 'lucide-react';
 
 interface Section {
     name: string;
@@ -45,6 +46,8 @@ export default function SectionPage() {
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [pendingUpload, setPendingUpload] = useState<{ file: File; path: string } | null>(null);
+    const [iconPickerOpen, setIconPickerOpen] = useState<string | null>(null);
+    const [iconSearchTerm, setIconSearchTerm] = useState('');
 
     const currentSection = sections.find(s => s.name.toLowerCase().replace(' ', '-') === sectionName);
 
@@ -350,7 +353,133 @@ export default function SectionPage() {
         'Geist'
     ];
 
+    // Get all available Lucide icon names
+    const AVAILABLE_ICONS = Object.keys(LucideIcons)
+        .filter(key => {
+            // Filter out non-icon exports (createLucideIcon, Icon interface, etc.)
+            if (key === 'createLucideIcon' || key === 'Icon' || key === 'icons' || key === 'default') {
+                return false;
+            }
+            // Check if it's a valid component (function or object with render method)
+            const value = (LucideIcons as any)[key];
+            return typeof value === 'function' || (typeof value === 'object' && value !== null);
+        })
+        .sort();
+
     const renderField = (key: string, value: any, path: string = key) => {
+        // Check if this is an icon field (icon, iconName, or ends with Icon)
+        if (typeof value === 'string' && (key === 'icon' || key === 'iconName' || key.toLowerCase().endsWith('icon')) && !key.toLowerCase().includes('background') && !key.toLowerCase().includes('image')) {
+            const IconComponent = (LucideIcons as any)[value];
+            const isOpen = iconPickerOpen === path;
+
+            // Only filter when searching, otherwise show first 100 - this improves performance
+            const filteredIcons = iconSearchTerm
+                ? AVAILABLE_ICONS.filter(iconName =>
+                    iconName.toLowerCase().includes(iconSearchTerm.toLowerCase())
+                ).slice(0, 200) // Limit search results to 200
+                : AVAILABLE_ICONS.slice(0, 100); // Show first 100 when not searching
+
+            const displayIcons = filteredIcons;
+
+            return (
+                <div key={path} className="mb-4 relative">
+                    <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                    </label>
+
+                    {/* Custom Icon Picker Button */}
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setIconPickerOpen(isOpen ? null : path);
+                            setIconSearchTerm('');
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white hover:bg-gray-600' : 'bg-white border-gray-300 hover:bg-gray-50'}`}
+                    >
+                        <div className="flex items-center gap-2">
+                            {IconComponent ? (
+                                <>
+                                    <IconComponent className="w-5 h-5" />
+                                    <span>{value}</span>
+                                </>
+                            ) : (
+                                <span className="text-gray-400">Select an icon...</span>
+                            )}
+                        </div>
+                        <svg className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    {/* Dropdown Panel */}
+                    {isOpen && (
+                        <>
+                            <div
+                                className="fixed inset-0 z-10"
+                                onClick={() => setIconPickerOpen(null)}
+                            />
+                            <div className={`absolute z-20 mt-1 w-full max-h-80 overflow-hidden rounded-md shadow-lg border ${theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'}`}>
+                                {/* Search Input */}
+                                <div className="p-2 border-b border-gray-200 dark:border-gray-600">
+                                    <input
+                                        type="text"
+                                        value={iconSearchTerm}
+                                        onChange={(e) => setIconSearchTerm(e.target.value)}
+                                        placeholder="Search icons..."
+                                        className={`w-full px-3 py-2 border rounded-md text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 placeholder-gray-500'}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        autoFocus
+                                    />
+                                </div>
+
+                                {/* Icons Grid */}
+                                <div className="overflow-y-auto max-h-64 p-2">
+                                    {displayIcons.length > 0 ? (
+                                        <>
+                                            <div className="grid grid-cols-4 gap-1">
+                                                {displayIcons.map((iconName) => {
+                                                    const Icon = (LucideIcons as any)[iconName];
+                                                    return (
+                                                        <button
+                                                            key={iconName}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                handleInputChange(path, iconName);
+                                                                setIconPickerOpen(null);
+                                                                setIconSearchTerm('');
+                                                            }}
+                                                            className={`flex flex-col items-center gap-1 p-2 rounded-md transition-colors ${value === iconName
+                                                                ? theme === 'dark' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-700'
+                                                                : theme === 'dark' ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
+                                                                }`}
+                                                            title={iconName}
+                                                        >
+                                                            {Icon && <Icon className="w-5 h-5" />}
+                                                            <span className="text-[10px] truncate w-full text-center">{iconName}</span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                            {!iconSearchTerm && AVAILABLE_ICONS.length > 100 && (
+                                                <div className={`text-center text-xs py-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                    Showing 100 of {AVAILABLE_ICONS.length} icons. Use search to find more.
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <div className={`p-4 text-center text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            No icons found matching "{iconSearchTerm}"
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
+            );
+        }
+
         // Check if this is a color field in Meta section
         if (currentSection?.file === 'meta.json' && typeof value === 'string' && /^#[0-9A-F]{6}$/i.test(value)) {
             return (
@@ -465,6 +594,178 @@ export default function SectionPage() {
         }
 
         if (Array.isArray(value)) {
+            // Special handling for header navigation items
+            const isHeaderNav = currentSection?.file === 'header.json' && key === 'navigation';
+
+            if (isHeaderNav) {
+                return (
+                    <div key={path} className="mb-6">
+                        <div className="flex justify-between items-center mb-3">
+                            <h4 className={`text-md font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                Navigation Items ({value.length})
+                            </h4>
+                            <button
+                                onClick={() => addArrayItem(path)}
+                                className="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 text-sm flex items-center gap-1"
+                            >
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                                </svg>
+                                Add Menu Item
+                            </button>
+                        </div>
+                        <div className="space-y-3">
+                            {value.map((item: any, index) => (
+                                <div key={`${path}.${index}`} className={`border rounded-lg p-4 ${theme === 'dark' ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-gray-50'}`}>
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h5 className={`font-semibold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                                            {item.label || `Menu Item ${index + 1}`}
+                                        </h5>
+                                        <button
+                                            onClick={() => {
+                                                if (confirm('Are you sure you want to delete this menu item?')) {
+                                                    removeArrayItem(path, index);
+                                                }
+                                            }}
+                                            className="text-red-600 hover:text-red-800"
+                                        >
+                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    {/* Label */}
+                                    <div className="mb-3">
+                                        <label className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            Label
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={item.label || ''}
+                                            onChange={(e) => handleArrayItemChange(path, index, 'label', e.target.value)}
+                                            className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                                            placeholder="Menu label"
+                                        />
+                                    </div>
+
+                                    {/* Link */}
+                                    <div className="mb-3">
+                                        <label className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            Link
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={item.link || ''}
+                                            onChange={(e) => handleArrayItemChange(path, index, 'link', e.target.value)}
+                                            className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                                            placeholder="/path"
+                                        />
+                                    </div>
+
+                                    {/* Has Dropdown Checkbox */}
+                                    <div className="mb-3">
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={item.hasDropdown || false}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.checked;
+                                                    handleArrayItemChange(path, index, 'hasDropdown', newValue);
+                                                    // Initialize dropdownItems array if checking the box
+                                                    if (newValue && !item.dropdownItems) {
+                                                        handleArrayItemChange(path, index, 'dropdownItems', []);
+                                                    }
+                                                }}
+                                                className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                            />
+                                            <span className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                Has Dropdown
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    {/* Dropdown Items */}
+                                    {item.hasDropdown && (
+                                        <div className={`mt-4 p-3 rounded-md ${theme === 'dark' ? 'bg-gray-700' : 'bg-white'}`}>
+                                            <div className="flex justify-between items-center mb-2">
+                                                <h6 className={`text-sm font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                    Dropdown Items ({item.dropdownItems?.length || 0})
+                                                </h6>
+                                                <button
+                                                    onClick={() => {
+                                                        const currentItems = item.dropdownItems || [];
+                                                        handleArrayItemChange(path, index, 'dropdownItems', [
+                                                            ...currentItems,
+                                                            { label: '', link: '' }
+                                                        ]);
+                                                    }}
+                                                    className="bg-indigo-600 text-white px-2 py-1 rounded text-xs hover:bg-indigo-700 flex items-center gap-1"
+                                                >
+                                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    Add Item
+                                                </button>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                {item.dropdownItems?.map((dropItem: any, dropIndex: number) => (
+                                                    <div key={dropIndex} className={`p-2 rounded border ${theme === 'dark' ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-gray-50'}`}>
+                                                        <div className="flex justify-between items-center mb-2">
+                                                            <span className={`text-xs font-medium ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                                Item {dropIndex + 1}
+                                                            </span>
+                                                            <button
+                                                                onClick={() => {
+                                                                    const newDropdownItems = [...item.dropdownItems];
+                                                                    newDropdownItems.splice(dropIndex, 1);
+                                                                    handleArrayItemChange(path, index, 'dropdownItems', newDropdownItems);
+                                                                }}
+                                                                className="text-red-600 hover:text-red-800"
+                                                            >
+                                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <input
+                                                                type="text"
+                                                                value={dropItem.label || ''}
+                                                                onChange={(e) => {
+                                                                    const newDropdownItems = [...item.dropdownItems];
+                                                                    newDropdownItems[dropIndex] = { ...dropItem, label: e.target.value };
+                                                                    handleArrayItemChange(path, index, 'dropdownItems', newDropdownItems);
+                                                                }}
+                                                                className={`w-full px-2 py-1 border rounded text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                                                                placeholder="Label"
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                value={dropItem.link || ''}
+                                                                onChange={(e) => {
+                                                                    const newDropdownItems = [...item.dropdownItems];
+                                                                    newDropdownItems[dropIndex] = { ...dropItem, link: e.target.value };
+                                                                    handleArrayItemChange(path, index, 'dropdownItems', newDropdownItems);
+                                                                }}
+                                                                className={`w-full px-2 py-1 border rounded text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                                                                placeholder="/link"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            }
+
+            // Default array handling for other sections
             return (
                 <div key={path} className="mb-6">
                     <div className="flex justify-between items-center mb-3">
@@ -489,6 +790,7 @@ export default function SectionPage() {
                                 if (item.title) previewText = item.title;
                                 else if (item.question) previewText = item.question.substring(0, 50) + (item.question.length > 50 ? '...' : '');
                                 else if (item.name) previewText = item.name;
+                                else if (item.label) previewText = item.label;
                                 else if (Object.keys(item).length > 0) {
                                     const firstKey = Object.keys(item)[0];
                                     const firstValue = item[firstKey];
@@ -556,6 +858,22 @@ export default function SectionPage() {
                     />
                 </div>
             );
+        } else if (typeof value === 'boolean') {
+            return (
+                <div key={path} className="mb-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={value}
+                            onChange={(e) => handleInputChange(path, e.target.checked)}
+                            className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <span className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                            {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                        </span>
+                    </label>
+                </div>
+            );
         } else if (typeof value === 'object' && value !== null) {
             return (
                 <div key={path} className="mb-4">
@@ -616,8 +934,8 @@ export default function SectionPage() {
                                 <button
                                     onClick={() => executeDownload(true)}
                                     className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left ${theme === 'dark'
-                                        ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 border-indigo-500 text-white shadow-lg hover:shadow-xl'
-                                        : 'bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 border-indigo-400 text-white shadow-md hover:shadow-lg'
+                                        ? 'bg-linear-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 border-indigo-500 text-white shadow-lg hover:shadow-xl'
+                                        : 'bg-linear-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 border-indigo-400 text-white shadow-md hover:shadow-lg'
                                         }`}
                                 >
                                     <div className="flex items-center gap-3">

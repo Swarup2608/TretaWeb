@@ -6,32 +6,32 @@
   },
   "values": [
     {
-      "iconName": "MessageCircle",
+      "iconName": "LucideMessageCircle",
       "title": "Discover & Diagnose",
       "description": "Uncover challenges, opportunities, and root causes with clarity."
     },
     {
-      "iconName": "Settings",
+      "iconName": "LucideSettings",
       "title": "Strategize & Plan",
       "description": "Build actionable roadmaps aligned with your business goals."
     },
     {
-      "iconName": "Rocket",
+      "iconName": "LucideActivity",
       "title": "Execute & Optimize",
       "description": "Build actionable roadmaps aligned with your business goals."
     },
     {
-      "iconName": "Target",
+      "iconName": "LucideTarget",
       "title": "Measure & Track",
       "description": "Monitor key metrics and performance indicators to ensure success."
     },
     {
-      "iconName": "Users",
+      "iconName": "LucideUsers",
       "title": "Collaborate & Engage",
       "description": "Foster teamwork and stakeholder alignment throughout the journey."
     },
     {
-      "iconName": "TrendingUp",
+      "iconName": "LucideTrendingUp",
       "title": "Scale & Grow",
       "description": "Expand your success with sustainable growth strategies and best practices."
     }

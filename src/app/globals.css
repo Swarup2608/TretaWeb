@@ -603,12 +603,12 @@ button.bg-secondary:hover,
 
 /* Icon Color Variants */
 .icon-blue {
-  background: rgba(59, 130, 246, 0.15);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   color: var(--primary);
 }
 
 .dark .icon-blue {
-  background: rgba(59, 130, 246, 0.2);
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
   color: var(--primary);
 }
 

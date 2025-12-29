@@ -1,71 +1,38 @@
 {
   "logo": {
-    "text": "OPTIMO",
+    "text": "Treta",
     "link": "/"
   },
   "navigation": [
     {
       "label": "Home",
       "link": "/",
-      "hasDropdown": true,
-      "dropdownItems": [
-        {
-          "label": "Home v1",
-          "link": "/"
-        },
-        {
-          "label": "Home v2",
-          "link": "/home-v2"
-        }
-      ]
+      "hasDropdown": false,
+      "dropdownItems": []
     },
     {
       "label": "About Us",
-      "link": "/about"
-    },
-    {
-      "label": "Blog",
-      "link": "/blog"
-    },
-    {
-      "label": "Services",
-      "link": "/services"
+      "link": "/about",
+      "hasDropdown": true,
+      "dropdownItems": [
+        {
+          "label": "Services",
+          "link": "/services"
+        },
+        {
+          "label": "Values",
+          "link": "/values"
+        }
+      ]
     },
     {
       "label": "Pricing",
       "link": "/pricing"
-    },
-    {
-      "label": "Pages",
-      "link": "#",
-      "hasDropdown": true,
-      "dropdownItems": [
-        {
-          "label": "Case Study",
-          "link": "/case-studies"
-        },
-        {
-          "label": "Service Details",
-          "link": "/services/wealth-finance"
-        },
-        {
-          "label": "Case Study Details",
-          "link": "/case-studies/optimizing-workflow-for-higher-profits"
-        },
-        {
-          "label": "Changelog",
-          "link": "/changelog"
-        },
-        {
-          "label": "404",
-          "link": "/404"
-        }
-      ]
     }
   ],
   "cta": {
     "label": "Contact Us",
     "link": "/contact",
-    "icon": "arrow-up-right"
+    "icon": "ArrowUpRight"
   }
 }

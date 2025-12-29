@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Target, TrendingUp, Globe, Shield, ArrowUpRight } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 interface Service {
     icon: string;
@@ -24,13 +25,6 @@ interface AboutData {
         link: string;
     };
 }
-
-const iconMap = {
-    target: Target,
-    'trending-up': TrendingUp,
-    globe: Globe,
-    shield: Shield,
-};
 
 const iconColorClasses = ['icon-blue', 'icon-purple', 'icon-green', 'icon-orange'];
 
@@ -136,12 +130,14 @@ export default function About() {
 
                             <div className="space-y-6 card-bg relative p-6 sm:p-8 rounded-2xl shadow-2xl transition-all duration-500 hover:shadow-3xl hover:-translate-y-1">
                                 <div className="absolute top-4 right-8 z-10">
-                                    <svg className="w-6 h-6 text-blue-600 dark:text-blue-400 transform rotate-45" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-6 h-6 text-primary transform rotate-45" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M16 12V4h1c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z" />
                                     </svg>
                                 </div>
                                 {aboutData.services.map((service, index) => {
-                                    const IconComponent = iconMap[service.icon as keyof typeof iconMap];
+                                    // Capitalize first letter for case-insensitive icon lookup
+                                    const iconName = service.icon.charAt(0).toUpperCase() + service.icon.slice(1);
+                                    const IconComponent = (LucideIcons as any)[iconName];
                                     const colorClass = iconColorClasses[index];
                                     return (
                                         <div
@@ -149,7 +145,7 @@ export default function About() {
                                             className="flex items-start gap-3 transition-all duration-300 hover:translate-x-2 group cursor-pointer"
                                         >
                                             <div className={`${colorClass} p-2.5 rounded-lg shrink-0 mt-0.5 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}>
-                                                <IconComponent className="w-5 h-5" />
+                                                {IconComponent && <IconComponent className="w-5 h-5" />}
                                             </div>
                                             <span className="text-base sm:text-lg font-normal card-text group-hover:text-blue-600 transition-colors duration-300">
                                                 {service.label}
@@ -168,7 +164,7 @@ export default function About() {
                             >
                                 {aboutData.cta.label}
                                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shrink-0 transition-all duration-300 group-hover:rotate-45 group-hover:scale-110">
-                                    <ArrowUpRight className="w-4 h-4 text-blue-600 transition-transform duration-300" />
+                                    <ArrowUpRight className="w-4 h-4 text-primary transition-transform duration-300" />
                                 </div>
                             </Link>
                         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageCircle, Settings, Rocket, Target, Users, TrendingUp } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 
 interface ValueItem {
     iconName: string;
@@ -17,15 +17,6 @@ interface ValuesData {
     };
     values: ValueItem[];
 }
-
-const iconMap = {
-    MessageCircle,
-    Settings,
-    Rocket,
-    Target,
-    Users,
-    TrendingUp,
-};
 
 export default function Values() {
     const [valuesData, setValuesData] = useState<ValuesData | null>(null);
@@ -53,7 +44,14 @@ export default function Values() {
                 {/* Values Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                     {valuesData.values.map((value, index) => {
-                        const IconComponent = iconMap[value.iconName as keyof typeof iconMap];
+                        // Capitalize first letter for case-insensitive icon lookup
+                        const iconName = value.iconName.charAt(0).toUpperCase() + value.iconName.slice(1);
+                        const IconComponent = (LucideIcons as any)[iconName];
+
+                        // Debug: log if icon is not found
+                        if (!IconComponent) {
+                            console.warn(`Icon not found: ${value.iconName} (tried: ${iconName})`);
+                        }
 
                         return (
                             <div
@@ -62,8 +60,10 @@ export default function Values() {
                             >
                                 {/* Icon */}
                                 <div className="w-14 h-14 sm:w-16 sm:h-16 mb-4 sm:mb-6 flex items-center justify-center values-icon-bg rounded-2xl">
-                                    {IconComponent && (
+                                    {IconComponent ? (
                                         <IconComponent className="w-7 h-7 sm:w-8 sm:h-8 values-icon-color" strokeWidth={2} />
+                                    ) : (
+                                        <div className="w-7 h-7 sm:w-8 sm:h-8 text-red-500 flex items-center justify-center">?</div>
                                     )}
                                 </div>
 

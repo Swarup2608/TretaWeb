@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTheme } from '@/context/ThemeContext';
+import * as LucideIcons from 'lucide-react';
 
 interface DropdownItem {
     label: string;
@@ -143,19 +144,10 @@ export default function Header() {
                                 className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:opacity-90 transition-all duration-300 font-medium"
                             >
                                 {headerData.cta.label}
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M7 17L17 7M17 7H7M17 7v10"
-                                    />
-                                </svg>
+                                {(() => {
+                                    const IconComponent = (LucideIcons as any)[headerData.cta.icon];
+                                    return IconComponent ? <IconComponent className="w-5 h-5" /> : null;
+                                })()}
                             </Link>
                         </div>
 
@@ -332,19 +324,10 @@ export default function Header() {
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 {headerData.cta.label}
-                                <svg
-                                    className="w-5 h-5 sm:w-6 sm:h-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M7 17L17 7M17 7H7M17 7v10"
-                                    />
-                                </svg>
+                                {(() => {
+                                    const IconComponent = (LucideIcons as any)[headerData.cta.icon];
+                                    return IconComponent ? <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" /> : null;
+                                })()}
                             </Link>
                         </nav>
                     </div>

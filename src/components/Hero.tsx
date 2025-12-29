@@ -40,10 +40,12 @@ export default function Hero() {
 
     return (
         <section className="relative min-h-screen flex flex-col px-4 sm:px-6 lg:px-8 ">
-            {/* Animated Background Image */}
+            {/* Animated Background Image with Overlay */}
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat hero-bg-animated cursor-zoom-in"
-                style={{ backgroundImage: `url(${heroData.backgroundImage})` }}
+                style={{
+                    backgroundImage: `linear-gradient(to bottom right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url(${heroData.backgroundImage})`
+                }}
                 onClick={() => setIsZoomed(true)}
             ></div>
 
@@ -71,9 +73,6 @@ export default function Hero() {
                     </div>
                 </div>
             )}
-
-            {/* Overlay for better text readability */}
-            <div className="absolute inset-0 bg-linear-to-br from-black/60 via-black/50 to-black/60 z-1 transition-all duration-700"></div>
 
             <div className="relative z-10 max-w-full mx-auto w-full flex flex-col justify-center lg:pb-32 pt-40 min-h-screen">
                 {/* Main Content */}
