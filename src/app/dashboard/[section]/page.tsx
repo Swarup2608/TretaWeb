@@ -8,6 +8,7 @@ import { useMeta } from '@/context/MetaContext';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import * as LucideIcons from 'lucide-react';
+import DashboardHeader from '@/components/DashboardHeader';
 
 interface Section {
     name: string;
@@ -40,9 +41,9 @@ export default function SectionPage() {
     const [sectionData, setSectionData] = useState<any>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [showDownloadModal, setShowDownloadModal] = useState(false);
     const [selectedFormat, setSelectedFormat] = useState<'csv' | 'excel' | 'json' | null>(null);
-    const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [pendingUpload, setPendingUpload] = useState<{ file: File; path: string } | null>(null);
