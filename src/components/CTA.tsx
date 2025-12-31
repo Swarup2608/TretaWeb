@@ -39,23 +39,41 @@ export default function CTA() {
 
     if (!ctaData) return null;
 
+    // Fallback values
+    const heading1 = ctaData.heading?.line1 || '';
+    const heading2 = ctaData.heading?.line2 || '';
+    const heading2Italic = ctaData.heading?.line2Italic || '';
+    const image = ctaData.image || '/images/hero/hero-img.png';
+    const title = ctaData.box?.title || '';
+    const description = ctaData.box?.description || '';
+    const schedule = ctaData.box?.schedule || [];
+    const ctaLabel = ctaData.box?.cta?.label || 'Contact Us';
+    const ctaLink = ctaData.box?.cta?.link || '/';
+
+    // Skip if no essential content
+    if (!heading1 && !title) {
+        return null;
+    }
+
     return (
         <section className="py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Heading */}
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 cta-heading-animate">
-                    {ctaData.heading.line1} {ctaData.heading.line2}{' '}
-                    <span className="italic font-serif">{ctaData.heading.line2Italic}</span>
-                </h2>
+                {(heading1 || heading2) && (
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 cta-heading-animate">
+                        {heading1} {heading2}{' '}
+                        {heading2Italic && <span className="italic font-serif">{heading2Italic}</span>}
+                    </h2>
+                )}
 
                 {/* Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
                     {/* Left - Image */}
                     <div className="cta-image-animate">
-                        <div className="relative rounded-3xl overflow-hidden h-[300px] sm:h-[400px] lg:h-full min-h-[500px]">
+                        <div className="relative rounded-3xl overflow-hidden h-75 sm:h-100 lg:h-full min-h-125">
                             <div
                                 className="absolute inset-0 bg-cover bg-center"
-                                style={{ backgroundImage: `url(${ctaData.image})` }}
+                                style={{ backgroundImage: `url(${image})` }}
                             ></div>
                         </div>
                     </div>
@@ -71,39 +89,45 @@ export default function CTA() {
                             </div>
 
                             {/* Title */}
-                            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 cta-title-color">
-                                {ctaData.box.title}
-                            </h3>
+                            {title && (
+                                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 cta-title-color">
+                                    {title}
+                                </h3>
+                            )}
 
                             {/* Description */}
-                            <p className="text-base sm:text-lg mb-6 sm:mb-8 cta-description-color leading-relaxed">
-                                {ctaData.box.description}
-                            </p>
+                            {description && (
+                                <p className="text-base sm:text-lg mb-6 sm:mb-8 cta-description-color leading-relaxed">
+                                    {description}
+                                </p>
+                            )}
 
                             {/* Schedule */}
-                            <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-10">
-                                {ctaData.box.schedule.map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex justify-between items-center pb-4 sm:pb-5 cta-schedule-border"
-                                    >
-                                        <span className="text-base sm:text-lg font-medium cta-schedule-text">
-                                            {item.days}
-                                        </span>
-                                        <span className="text-base sm:text-lg font-semibold cta-schedule-time">
-                                            {item.time}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
+                            {schedule.length > 0 && (
+                                <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-10">
+                                    {schedule.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex justify-between items-center pb-4 sm:pb-5 cta-schedule-border"
+                                        >
+                                            <span className="text-base sm:text-lg font-medium cta-schedule-text">
+                                                {item.days}
+                                            </span>
+                                            <span className="text-base sm:text-lg font-semibold cta-schedule-time">
+                                                {item.time}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
 
                             {/* CTA Button */}
                             <Link
-                                href={ctaData.box.cta.link}
+                                href={ctaLink}
                                 className="inline-flex items-center gap-0 rounded-full w-fit transition-all duration-300 hover:scale-105 hover:shadow-2xl group/button cta-btn-wrapper"
                             >
                                 <span className="px-7 py-3.5 sm:px-8 sm:py-4 font-semibold text-base sm:text-lg cta-btn-text">
-                                    {ctaData.box.cta.label}
+                                    {ctaLabel}
                                 </span>
                                 <span className="w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mr-2 group-hover/button:rotate-45 transition-transform duration-300 cta-btn-icon-bg">
                                     <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 cta-btn-icon-color" />

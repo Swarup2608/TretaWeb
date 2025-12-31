@@ -8,8 +8,8 @@ import { Readable } from 'stream';
 
 // Allowed sections that can be downloaded
 const ALLOWED_SECTIONS = [
-    'hero', 'about', 'services', 'numbersHome', 'values', 
-    'caseStudies', 'faq', 'footer', 'header', 'cta', 'meta'
+    'hero', 'about', 'aboutPage', 'services', 'numbersHome', 'values', 
+    'caseStudies', 'careers', 'footer', 'header', 'cta', 'meta'
 ];
 
 export async function GET(request: NextRequest) {

@@ -5,7 +5,22 @@ import { verifyAuth } from '@/utils/auth';
 import { existsSync } from 'fs';
 
 // Allowed sections for image uploads
-const ALLOWED_SECTIONS = ['hero', 'about', 'services', 'caseStudies', 'footer', 'header', 'favicon'];
+const ALLOWED_SECTIONS = [
+    'hero', 
+    'about', 
+    'about-page',
+    'services', 
+    'case-studies', 
+    'casestudies',
+    'numbers', 
+    'values',
+    'careers',
+    'footer', 
+    'header', 
+    'cta',
+    'meta',
+    'favicon'
+];
 
 export async function POST(request: NextRequest) {
     try {

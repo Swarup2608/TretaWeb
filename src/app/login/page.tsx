@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import DashboardHeader from '@/components/DashboardHeader';
+import DashboardFooter from '@/components/DashboardFooter';
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -29,9 +30,9 @@ export default function LoginPage() {
     };
 
     return (
-        <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
+        <div className={`min-h-screen flex flex-col transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
             <DashboardHeader currentPage="login" title="Admin Login" />
-            <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className={`max-w-md w-full space-y-8 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} p-8 rounded-lg shadow-lg`}>
                     <div>
                         <h2 className={`mt-6 text-center text-3xl font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
@@ -93,6 +94,7 @@ export default function LoginPage() {
                     </form>
                 </div>
             </div>
+            <DashboardFooter />
         </div>
     );
 }

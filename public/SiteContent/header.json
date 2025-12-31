@@ -13,7 +13,7 @@
     {
       "label": "About Us",
       "link": "/about",
-      "hasDropdown": true,
+      "hasDropdown": false,
       "dropdownItems": [
         {
           "label": "Services",
@@ -26,8 +26,14 @@
       ]
     },
     {
-      "label": "Pricing",
-      "link": "/pricing"
+      "label": "Services",
+      "link": "/services"
+    },
+    {
+      "label": "Case Studies",
+      "link": "/case-studies",
+      "hasDropdown": false,
+      "dropdownItems": []
     }
   ],
   "cta": {

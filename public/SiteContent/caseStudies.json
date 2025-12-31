@@ -4,36 +4,72 @@
     "line2": "Grow",
     "line2Italic": "Smarter"
   },
+  "banner": {
+    "backgroundImage": "/images/case-studies-banner.jpg",
+    "eyebrow": "[Success Stories]",
+    "heading": "Explore",
+    "headingItalic": "Case Studies"
+  },
   "caseStudies": [
     {
+      "id": 1,
+      "slug": "vertex-manufacturing",
       "title": "Streamlining Operations for Scalable Growth",
       "description": "Helping Vertex Manufacturing cut inefficiencies and achieve sustainable growth through smarter operations.",
+      "fullDescription": "<p>Vertex Manufacturing approached us with a challenge: their operations were hindered by inefficiencies that prevented scalable growth. Through comprehensive analysis and strategic implementation, we transformed their operational framework.</p><p><img src=\"/images/case-studies/1767130786785_SustainabilitySourcing.png\" alt=\"\" class=\"w-full max-w-2xl rounded-lg my-4\"></p><p>Our team conducted a thorough assessment of their existing processes, identifying key bottlenecks and areas for improvement. We implemented <strong>lean manufacturing principles</strong> combined with modern digital tools to create a more agile and efficient operation.</p><p>The results were remarkable - <em>30% reduction in operational costs</em>, improved productivity, and a clear path to sustainable growth.</p>",
       "image": "/images/case-study-1.jpg",
-      "link": "/case-studies/vertex-manufacturing"
+      "labels": "Manufacturing, Operations, Efficiency, CA",
+      "uploadDate": "2024-12-15",
+      "button": "Contact Us",
+      "link": "/contact"
     },
     {
+      "id": 2,
+      "slug": "digital-transformation",
       "title": "Driving Efficiency Through Digital Transformation",
       "description": "Transforming legacy systems into modern digital solutions for increased productivity.",
+      "fullDescription": "<p>Our client was struggling with outdated legacy systems that slowed down their operations and limited growth potential. We embarked on a comprehensive digital transformation journey to modernize their entire technology infrastructure.</p><p>By implementing <strong>cloud-based solutions</strong>, automating manual processes, and integrating advanced analytics, we created a seamless digital ecosystem. The transformation included migrating critical data, training staff, and ensuring zero downtime during the transition.</p><p>The outcome exceeded expectations with <em>45% increase in operational efficiency</em> and significant cost savings in IT maintenance.</p>",
       "image": "/images/case-study-2.jpg",
-      "link": "/case-studies/digital-transformation"
+      "labels": "Technology, Digital, Automation",
+      "uploadDate": "2024-11-28",
+      "button": "Contact Us",
+      "link": "/contact"
     },
     {
+      "id": 3,
+      "slug": "market-expansion",
       "title": "Expanding Market Presence with Smarter Sales Strategies",
       "description": "Helping NovaHealth strengthen national reach with data-driven campaigns and optimized sales operations.",
+      "fullDescription": "<p>NovaHealth wanted to expand their market presence nationally but lacked the strategic framework to do so effectively. We developed a comprehensive market expansion strategy powered by data analytics and optimized sales operations.</p><p>Our approach included <strong>market research</strong>, competitive analysis, and the development of targeted campaigns for different regions. We implemented a CRM system to track leads, optimize conversion rates, and measure campaign effectiveness in real-time.</p><p>The results were impressive: <em>60% increase in market reach</em> and a 40% boost in qualified leads within the first six months.</p>",
       "image": "/images/case-study-3.jpg",
-      "link": "/case-studies/market-expansion"
+      "labels": "Marketing, Sales, Strategy",
+      "uploadDate": "2024-10-20",
+      "button": "Contact Us",
+      "link": "/contact"
     },
     {
+      "id": 4,
+      "slug": "supply-chain",
       "title": "Building Resilient Supply Chains",
       "description": "Creating robust supply chain solutions that adapt to market changes and disruptions.",
+      "fullDescription": "<p>In an era of global disruptions, our client needed a resilient supply chain that could adapt to unexpected changes. We designed and implemented a comprehensive supply chain management system that prioritizes flexibility and risk mitigation.</p><p>The solution included <strong>predictive analytics</strong> for demand forecasting, diversified supplier networks, and real-time monitoring systems. We also established contingency protocols to handle disruptions effectively.</p><p>The new system resulted in <em>50% reduction in supply chain disruptions</em> and improved delivery times by 35%.</p>",
       "image": "/images/case-study-4.jpg",
-      "link": "/case-studies/supply-chain"
+      "labels": "Supply Chain, Logistics, Risk Management",
+      "uploadDate": "2024-09-10",
+      "button": "Contact Us",
+      "link": "/contact"
     },
     {
+      "id": 5,
+      "slug": "agile-innovation",
       "title": "Accelerating Innovation Through Agile Practices",
       "description": "Empowering teams with agile methodologies to drive faster innovation and better outcomes.",
+      "fullDescription": "<p>Our client's development teams were struggling with slow delivery cycles and inability to respond quickly to market demands. We introduced <strong>agile methodologies</strong> and transformed their entire development culture.</p><p>Through comprehensive training, process redesign, and implementation of agile tools, we enabled teams to work in sprints, deliver incrementally, and respond to feedback rapidly. We established cross-functional teams and implemented continuous integration/continuous deployment (CI/CD) pipelines.</p><p>The transformation led to <em>70% faster time-to-market</em> for new features and significantly improved team morale and collaboration.</p>",
       "image": "/images/case-study-5.jpg",
-      "link": "/case-studies/agile-innovation"
+      "labels": "Agile, Innovation, Development",
+      "uploadDate": "2024-12-01",
+      "button": "Contact Us",
+      "link": "/contact"
     }
   ]
 }

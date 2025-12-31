@@ -1,53 +1,123 @@
 {
-    "heading": "Driving Growth Through Strategic Excellence",
-    "cta": {
-        "label": "See All Service",
-        "link": "/services"
+  "heading": "Driving Growth Through Strategic Excellence",
+  "cta": {
+    "label": "See All Service",
+    "link": "/services"
+  },
+  "banner": {
+    "backgroundImage": "/images/services/banner.jpg",
+    "eyebrow": "[Core Services]",
+    "heading": "Explore More",
+    "headingItalic": "Services"
+  },
+  "services": [
+    {
+      "id": 1,
+      "slug": "wealth-finance",
+      "icon": "FileText",
+      "title": "Wealth & Finance",
+      "overview": "Strategic financial planning and wealth management solutions",
+      "image": "/images/services/wealth-finance.jpg",
+      "description": "Our Strategy Consulting service empowers businesses to define a clear path forward, refine their focus.",
+      "fullDescription": "<p>Our Wealth &amp; Finance Management service provides comprehensive financial solutions tailored to your business needs. We help organizations optimize their financial strategies, manage wealth effectively, and achieve sustainable growth.</p><p>Our team of <strong>experienced financial consultants</strong> works closely with you to understand your unique challenges and opportunities. We analyze your current financial position, identify areas for improvement, and develop customized strategies that align with your business goals.</p><p><img src=\"/images/services/1767129633730_TechTexture.png\" alt=\"\" class=\"w-full max-w-2xl rounded-lg my-4\"></p><p>From <em>budgeting and forecasting</em> to investment planning and risk management, we provide end-to-end financial consulting services. Our data-driven approach ensures that every decision is backed by thorough analysis and industry insights.</p>",
+      "features": [
+        "Investment Portfolio Management",
+        "Tax Optimization Strategies",
+        "Retirement Planning Solutions"
+      ],
+      "button": "Book a call",
+      "link": "/contact",
+      "showonHome": true
     },
-    "services": [
-        {
-            "title": "Wealth Finance",
-            "overview": "Strategic financial planning and wealth management solutions",
-            "image": "/images/wealth-finance.jpg",
-            "description": "Comprehensive financial strategies designed to maximize wealth creation and preservation through intelligent investment planning.",
-            "features": [
-                "Investment Portfolio Management",
-                "Tax Optimization Strategies",
-                "Retirement Planning Solutions"
-            ]
-        },
-        {
-            "title": "Risk Assessment",
-            "overview": "Helping organizations identify vulnerabilities and safeguard assets with proactive, data-driven risk strategies.",
-            "image": "/images/risk-assessment.jpg",
-            "description": "Comprehensive risk evaluation and mitigation strategies to protect your business from potential threats and uncertainties.",
-            "features": [
-                "Comprehensive Risk Audits",
-                "Compliance & Regulatory Alignment",
-                "Crisis Management & Prevention"
-            ]
-        },
-        {
-            "title": "Team Strategy",
-            "overview": "Building high-performance teams through strategic organizational development",
-            "image": "/images/team-strategy.jpg",
-            "description": "Strategic planning and team optimization to enhance collaboration, productivity, and organizational effectiveness.",
-            "features": [
-                "Leadership Development Programs",
-                "Team Performance Analytics",
-                "Organizational Culture Building"
-            ]
-        },
-        {
-            "title": "Growth Planning",
-            "overview": "Scalable growth strategies for sustainable business expansion",
-            "image": "/images/growth-planning.jpg",
-            "description": "Data-driven growth strategies designed to accelerate business expansion and market penetration.",
-            "features": [
-                "Market Analysis & Research",
-                "Scalability Framework Development",
-                "Revenue Optimization Strategies"
-            ]
-        }
-    ]
+    {
+      "id": 2,
+      "slug": "risk-assessment",
+      "icon": "Shield",
+      "title": "Risk Assessment",
+      "overview": "Helping organizations identify vulnerabilities and safeguard assets with proactive, data-driven risk strategies.",
+      "image": "/images/services/risk-assessment.jpg",
+      "description": "Our Risk Assessment service empowers organizations to uncover hidden risks, and strengthen resilience.",
+      "fullDescription": "<p>Our Risk Assessment & Mitigation service helps organizations identify, evaluate, and manage potential risks before they become critical issues. We conduct <strong>comprehensive risk audits</strong> and develop robust mitigation strategies.</p><p>Using advanced analytical tools and proven methodologies, we assess risks across all aspects of your business operations. From operational and financial risks to strategic and compliance risks, we provide a <em>360-degree view</em> of your risk landscape.</p><p>Our experts work with your team to implement effective risk management frameworks, establish monitoring systems, and create contingency plans. We empower you to make informed decisions and build organizational resilience.</p>",
+      "features": [
+        "Comprehensive Risk Audits",
+        "Compliance & Regulatory Alignment",
+        "Crisis Management & Prevention"
+      ],
+      "button": "Book a call",
+      "link": "/contact",
+      "showonHome": true
+    },
+    {
+      "id": 3,
+      "slug": "talent-strategy",
+      "icon": "Users",
+      "title": "Talent Strategy",
+      "overview": "Building high-performance teams through strategic organizational development",
+      "image": "/images/services/talent-strategy.jpg",
+      "description": "Our Talent Strategy service empowers organizations to optimize their people, and foster engagement.",
+      "fullDescription": "<p>Our Talent Strategy & Development service focuses on building <strong>high-performing teams</strong> and creating a culture of excellence. We help organizations attract, develop, and retain top talent while maximizing employee engagement.</p><p>We work with leadership teams to design comprehensive talent strategies that align with business objectives. Our services include <em>workforce planning, succession planning, leadership development</em>, and organizational culture transformation.</p><p>Through data-driven insights and proven best practices, we help you create an environment where talent thrives. From recruitment strategies to performance management systems, we provide end-to-end talent solutions.</p>",
+      "features": [
+        "Leadership Development Programs",
+        "Team Performance Analytics",
+        "Organizational Culture Building"
+      ],
+      "button": "Book a call",
+      "link": "/contact",
+      "showonHome": true
+    },
+    {
+      "id": 4,
+      "slug": "growth-planning",
+      "icon": "Lightbulb",
+      "title": "Growth Planning",
+      "overview": "Scalable growth strategies for sustainable business expansion",
+      "image": "/images/services/growth-planning.jpg",
+      "description": "Our Growth Planning service empowers organizations to unlock new opportunities, and scale effectively.",
+      "fullDescription": "<p>Our Growth Planning & Execution service is designed to help businesses identify and capitalize on <strong>growth opportunities</strong>. We develop strategic roadmaps that drive sustainable expansion and competitive advantage.</p><p>Our consultants work with you to analyze market trends, evaluate growth options, and create actionable plans. Whether you're looking to <em>enter new markets, launch new products, or scale operations</em>, we provide the strategic guidance you need.</p><p>We combine strategic planning with execution support, ensuring that your growth initiatives are implemented effectively. Our approach includes market analysis, business model innovation, and operational scaling strategies.</p>",
+      "features": [
+        "Market Analysis & Research",
+        "Scalability Framework Development",
+        "Revenue Optimization Strategies"
+      ],
+      "button": "Book a call",
+      "link": "/contact",
+      "showonHome": true
+    },
+    {
+      "id": 5,
+      "slug": "performance-optimize",
+      "icon": "Rocket",
+      "title": "Performance Optimize",
+      "overview": "Our Performance Optimization service empowers organizations to streamline processes.",
+      "image": "/images/services/performance-optimize.jpg",
+      "description": "Our Performance Optimization service empowers organizations to streamline processes.",
+      "fullDescription": "<p>Our Performance Optimization service helps organizations maximize <strong>efficiency and effectiveness</strong> across all operations. We identify bottlenecks, eliminate waste, and implement systems that drive continuous improvement.</p><p>Using lean methodologies and process excellence frameworks, we analyze your operations to uncover opportunities for optimization. From <em>workflow redesign to technology integration</em>, we help you achieve operational excellence.</p><p>Our approach combines process analysis, technology enablement, and change management to deliver sustainable results. We work alongside your team to ensure that improvements are embedded in your organizational DNA.</p>",
+      "features": [
+        "Process Efficiency Analysis",
+        "Performance Metrics Design",
+        "Continuous Improvement Programs"
+      ],
+      "button": "Book a call",
+      "link": "/contact",
+      "showonHome": true
+    },
+    {
+      "id": 6,
+      "slug": "market-analysis",
+      "icon": "TrendingUp",
+      "title": "Market Analysis",
+      "overview": "Our Market Analysis service empowers organizations to understand trends and make data-driven decisions.",
+      "image": "/images/services/market-analysis.jpg",
+      "description": "Our Market Analysis service empowers organizations to understand trends and make data-driven decisions.",
+      "fullDescription": "<p>Our Market Analysis & Insights service provides deep <strong>market intelligence</strong> that informs strategic decision-making. We help organizations understand market dynamics, competitive landscapes, and emerging opportunities.</p><p>Through comprehensive research and advanced analytics, we deliver actionable insights about your market, customers, and competitors. Our analysis covers <em>market sizing, trend analysis, customer segmentation</em>, and competitive positioning.</p><p>We transform complex data into clear strategic recommendations, enabling you to make confident decisions. Whether you're entering a new market or defending your position, our insights give you the <strong>competitive edge</strong> you need.</p>",
+      "features": [
+        "Competitive Intelligence",
+        "Market Trend Forecasting",
+        "Customer Behavior Analytics"
+      ],
+      "button": "Book a call",
+      "link": "/contact",
+      "showonHome": false
+    }
+  ]
 }

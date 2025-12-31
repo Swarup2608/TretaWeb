@@ -108,7 +108,7 @@ export default function CaseStudies() {
                                     key={index}
                                     className="shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] case-study-card-animate"
                                 >
-                                    <div className="relative rounded-3xl overflow-hidden h-100 sm:h-112.5 lg:h-125 case-study-card-bg shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-2 has-[a:hover]:-translate-y-0">
+                                    <div className="relative rounded-3xl overflow-hidden h-100 sm:h-112.5 lg:h-125 case-study-card-bg shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-2 has-[a:hover]:translate-y-0">
                                         {/* Image Container */}
                                         <div className="absolute inset-0 overflow-hidden">
                                             <div
@@ -121,6 +121,20 @@ export default function CaseStudies() {
 
                                         {/* Content Box - Positioned absolutely on top */}
                                         <div className="absolute bottom-0 left-0 right-0 p-7 sm:p-8 rounded-3xl m-5 case-study-content-bg backdrop-blur-md transition-all duration-400 ease-out flex flex-col justify-start z-2 sm:h-auto sm:min-h-22.5 group-hover:sm:min-h-75">
+                                            {/* Labels - Subtle display */}
+                                            {(study as any).labels && (
+                                                <div className="flex flex-wrap gap-2 mb-3 shrink-0">
+                                                    {(study as any).labels.split(',').slice(0, 2).map((label: string, idx: number) => (
+                                                        <span
+                                                            key={idx}
+                                                            className="px-2.5 py-1 text-xs font-medium bg-white/20 text-white backdrop-blur-sm rounded-full"
+                                                        >
+                                                            {label.trim()}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+
                                             {/* Title - Always visible */}
                                             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold leading-tight mb-0 sm:mb-3 shrink-0 case-study-title-color">
                                                 {study.title}
@@ -134,7 +148,7 @@ export default function CaseStudies() {
                                             {/* Button - Always visible on mobile, visible on hover for desktop */}
                                             <Link
                                                 href={study.link}
-                                                className="inline-flex items-center gap-3 rounded-full w-fit shrink-0 sm:opacity-0 sm:max-h-0 sm:overflow-hidden sm:translate-y-5 group-hover:sm:opacity-100 group-hover:sm:max-h-25 group-hover:sm:translate-y-0 transition-all duration-400 ease-out case-study-btn-wrapper group/button px-6 py-3.5 font-semibold text-base"
+                                                className="inline-flex items-center gap-3 rounded-full w-fit shrink-0 sm:opacity-0 sm:max-h-0 sm:overflow-hidden sm:translate-y-5 group-hover:sm:opacity-100 group-hover:sm:max-h-25 group-hover:sm:translate-y-0 transition-all duration-400 ease-out case-study-btn-wrapper group/button px-6 py-3.5 font-semibold text-base text-white"
                                             >
                                                 View Case Study
                                                 <div className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover/button:rotate-45 faq-cta-icon-bg">

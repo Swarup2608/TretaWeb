@@ -1,0 +1,30 @@
+{
+  "title": "Careers@Treta",
+  "heading": "Looking to kickstart your career or take it to the next level?",
+  "description": "Join Treta if you want to work on meaningful projects, learn continuously, and be part of a team that genuinely cares.",
+  "image": "/images/revenue.svg",
+  "showBubbles": true,
+  "currentOpenings": {
+    "title": "Current Openings",
+    "subtitle": "We're always looking for motivated individuals to join our growing team.",
+    "contact": "Send us your resume at support@tretagroup.com for future opportunities."
+  },
+  "careerPaths": {
+    "title": "Career Paths",
+    "roles": [
+      {
+        "id": 1,
+        "title": "Articleship / Internship for CA students"
+      },
+      {
+        "id": 2,
+        "title": "Full-time roles for qualified CAs"
+      },
+      {
+        "id": 3,
+        "title": "Specializations: audit, taxation, advisory, compliance, etc."
+      }
+    ]
+  },
+  "resumeEmail": "support@tretagroup.com"
+}

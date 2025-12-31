@@ -7,8 +7,8 @@ import NumbersSection from '@/components/NumbersSection';
 import Services from '@/components/Services';
 import Values from '@/components/Values';
 import CaseStudies from '@/components/CaseStudies';
+import Careers from '@/components/Careers';
 import CTA from '@/components/CTA';
-import FAQ from '@/components/FAQ';
 import { trackPageVisit } from '@/utils/analytics';
 
 export default function Home() {
@@ -24,8 +24,8 @@ export default function Home() {
       <Services />
       <Values />
       <CaseStudies />
+      <Careers />
       <CTA />
-      <FAQ />
     </div>
   );
 }

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
+import { useMeta } from '@/context/MetaContext';
 import * as LucideIcons from 'lucide-react';
 
 interface DropdownItem {
@@ -35,7 +37,15 @@ export default function Header() {
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
+    const [isScrolled, setIsScrolled] = useState(false);
     const { theme, toggleTheme } = useTheme();
+    const pathname = usePathname();
+
+    // Pages with hero/banner sections
+    const pagesWithHeroBanner = ['/', '/services', '/about', '/case-studies'];
+    const hasHeroBanner = pagesWithHeroBanner.includes(pathname) ||
+        pathname.startsWith('/services/') ||
+        pathname.startsWith('/case-study/');
 
     useEffect(() => {
         fetch('/SiteContent/header.json')
@@ -44,15 +54,41 @@ export default function Header() {
             .catch((error) => console.error('Error loading header data:', error));
     }, []);
 
+    useEffect(() => {
+        if (!hasHeroBanner) {
+            setIsScrolled(true); // Always use theme colors on non-hero pages
+            return;
+        }
+
+        const handleScroll = () => {
+            // Detect if scrolled past hero/banner section
+            const scrollPosition = window.scrollY;
+            // Home page has taller hero, others have ~400-500px banners
+            const heroHeight = pathname === '/' ? window.innerHeight * 0.8 : 400;
+            setIsScrolled(scrollPosition > heroHeight);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Check initial position
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [hasHeroBanner, pathname]);
+
     if (!headerData) {
         return null;
     }
+
+    // Determine if we should use hero styling (white text, primary logo)
+    const useHeroStyling = hasHeroBanner && !isScrolled;
 
     return (
         <>
             <header className="fixed top-4 left-4 right-4 z-50 mx-auto max-w-7xl">
                 <div
-                    className="header-bg rounded-3xl px-6 lg:px-8 relative border border-white/60 dark:border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] transition-all duration-300"
+                    className={`rounded-3xl px-6 lg:px-8 relative border shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] transition-all duration-300 ${useHeroStyling
+                        ? 'bg-white/10 border-white/20'
+                        : 'header-bg border-white/60 dark:border-white/20'
+                        }`}
                     style={{
                         backdropFilter: 'blur(40px) saturate(200%)',
                         WebkitBackdropFilter: 'blur(40px) saturate(200%)'
@@ -62,7 +98,7 @@ export default function Header() {
                         {/* Logo */}
                         <Link
                             href={headerData.logo.link}
-                            className="header-logo text-2xl font-bold transition-colors"
+                            className={`text-2xl font-bold transition-colors header-logo text-primary`}
                         >
                             {headerData.logo.text}
                         </Link>
@@ -78,7 +114,8 @@ export default function Header() {
                                 >
                                     <Link
                                         href={item.link}
-                                        className="header-text flex items-center gap-1 hover:opacity-80 transition-colors font-medium py-2"
+                                        className={`flex items-center gap-1 hover:opacity-80 transition-colors font-medium py-2 ${useHeroStyling ? 'text-white' : 'header-text'
+                                            }`}
                                     >
                                         {item.label}
                                         {item.hasDropdown && (
@@ -126,7 +163,8 @@ export default function Header() {
                         <div className="hidden lg:flex items-center gap-3">
                             <button
                                 onClick={toggleTheme}
-                                className="header-text p-2 hover:opacity-80 transition-colors"
+                                className={`p-2 hover:opacity-80 transition-colors ${useHeroStyling ? 'text-white' : 'header-text'
+                                    }`}
                                 aria-label="Toggle theme"
                             >
                                 {theme === 'dark' ? (
@@ -155,7 +193,8 @@ export default function Header() {
                         <div className="lg:hidden flex items-center gap-2">
                             <button
                                 onClick={toggleTheme}
-                                className="header-text p-2 hover:opacity-80 transition-colors"
+                                className={`p-2 hover:opacity-80 transition-colors ${useHeroStyling ? 'text-white' : 'header-text'
+                                    }`}
                                 aria-label="Toggle theme"
                             >
                                 {theme === 'dark' ? (
@@ -169,7 +208,8 @@ export default function Header() {
                                 )}
                             </button>
                             <button
-                                className="header-text p-2 hover:opacity-80 transition-colors"
+                                className={`p-2 hover:opacity-80 transition-colors ${useHeroStyling ? 'text-white' : 'header-text'
+                                    }`}
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                 aria-label="Toggle menu"
                             >

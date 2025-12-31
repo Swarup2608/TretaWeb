@@ -8,6 +8,7 @@ interface Service {
     image: string;
     description: string;
     features: string[];
+    showonHome: boolean;
 }
 
 interface ServicesData {
@@ -20,19 +21,43 @@ interface ServicesData {
 }
 
 export default function Services() {
+    // 1️⃣ ALL hooks first — no conditions, no returns
     const [data, setData] = useState<ServicesData | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
+    const [visibleServices, setVisibleServices] = useState<Service[]>([]);
 
     useEffect(() => {
-        fetch("/SiteContent/services.json")
-            .then((res) => res.json())
-            .then((jsonData) => setData(jsonData));
+        fetch('/SiteContent/services.json')
+            .then(res => res.json())
+            .then(json => setData(json));
 
         setIsVisible(true);
     }, []);
 
-    if (!data) return null;
+    useEffect(() => {
+        if (!data) return;
+        setVisibleServices(data.services.filter(s => s.showonHome));
+    }, [data]);
+
+    useEffect(() => {
+        if (activeIndex >= visibleServices.length) {
+            setActiveIndex(0);
+        }
+    }, [activeIndex, visibleServices.length]);
+
+    // 2️⃣ THEN conditional rendering
+    if (!data) {
+        return null; // or loader
+    }
+
+    if (visibleServices.length === 0) {
+        return null;
+    }
+
+    // 3️⃣ Normal render
+    const activeService = visibleServices[activeIndex];
+
 
     const handleAccordionClick = (index: number) => {
         setActiveIndex(index);
@@ -61,7 +86,7 @@ export default function Services() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                     {/* Left Column - Accordion */}
                     <div className="space-y-2">
-                        {data.services.map((service, index) => (
+                        {visibleServices.map((service, index) => (
                             <div
                                 key={index}
                                 className={`border-b card-text-muted transition-all duration-500 ${isVisible
@@ -111,7 +136,7 @@ export default function Services() {
                                             className="inline-flex items-center gap-3 rounded-full w-fit transition-all duration-300 hover:scale-105 hover:shadow-xl group btn-primary px-6 py-3.5 font-semibold text-base"
                                         >
                                             Explore Service
-                                            <div className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 faq-cta-icon-bg">
+                                            <div className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 bg-white text-primary">
                                                 <ArrowUpRight className="w-4 h-4 faq-cta-icon" />
                                             </div>
                                         </a>
@@ -127,10 +152,10 @@ export default function Services() {
                             }`}
                     >
                         <div className="relative aspect-4/5 rounded-3xl overflow-hidden card-bg shadow-2xl">
-                            {data.services[activeIndex].image && (
+                            {visibleServices[activeIndex].image && (
                                 <img
-                                    src={data.services[activeIndex].image}
-                                    alt={data.services[activeIndex].title}
+                                    src={visibleServices[activeIndex].image}
+                                    alt={visibleServices[activeIndex].title}
                                     className="w-full h-full object-cover transition-all duration-500"
                                     key={activeIndex}
                                 />

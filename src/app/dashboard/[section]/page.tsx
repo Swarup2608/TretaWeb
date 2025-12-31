@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -9,6 +9,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import * as LucideIcons from 'lucide-react';
 import DashboardHeader from '@/components/DashboardHeader';
+import DashboardFooter from '@/components/DashboardFooter';
 
 interface Section {
     name: string;
@@ -19,11 +20,12 @@ interface Section {
 const sections: Section[] = [
     { name: 'Hero', file: 'hero.json', description: 'Main hero section content' },
     { name: 'About', file: 'about.json', description: 'About section information' },
-    { name: 'Services', file: 'services.json', description: 'Services offered' },
+    { name: 'About Page', file: 'aboutPage.json', description: 'Complete About Us page with all sections' },
+    { name: 'Services', file: 'services.json', description: 'Services offered with banner and detail pages' },
     { name: 'Numbers', file: 'numbersHome.json', description: 'Statistics and numbers' },
     { name: 'Values', file: 'values.json', description: 'Company values' },
     { name: 'Case Studies', file: 'caseStudies.json', description: 'Case studies showcase' },
-    { name: 'FAQ', file: 'faq.json', description: 'Frequently asked questions' },
+    { name: 'Careers', file: 'careers.json', description: 'Careers and job opportunities' },
     { name: 'Footer', file: 'footer.json', description: 'Footer content' },
     { name: 'Header', file: 'header.json', description: 'Navigation and header' },
     { name: 'CTA', file: 'cta.json', description: 'Call to action content' },
@@ -31,7 +33,7 @@ const sections: Section[] = [
 ];
 
 export default function SectionPage() {
-    const { user, token, logout } = useAuth();
+    const { user, token, isLoading, logout } = useAuth();
     const { theme } = useTheme();
     const { updateMeta } = useMeta();
     const router = useRouter();
@@ -50,9 +52,20 @@ export default function SectionPage() {
     const [iconPickerOpen, setIconPickerOpen] = useState<string | null>(null);
     const [iconSearchTerm, setIconSearchTerm] = useState('');
 
+    // Rich text editor modals
+    const [showLinkModal, setShowLinkModal] = useState(false);
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [linkData, setLinkData] = useState({ text: '', url: '', path: '', start: 0, end: 0 });
+    const [imageData, setImageData] = useState({ url: '', alt: '', path: '', start: 0, file: null as File | null });
+    const [richTextPath, setRichTextPath] = useState<string>('');
+    const [savedSelection, setSavedSelection] = useState<Range | null>(null);
+
     const currentSection = sections.find(s => s.name.toLowerCase().replace(' ', '-') === sectionName);
 
     useEffect(() => {
+        // Don't redirect while still loading
+        if (isLoading) return;
+
         if (!token) {
             router.push('/login');
             return;
@@ -64,7 +77,7 @@ export default function SectionPage() {
         }
 
         loadSectionData();
-    }, [token, currentSection, router]);
+    }, [token, currentSection, router, isLoading]);
 
     const loadSectionData = async () => {
         try {
@@ -163,11 +176,17 @@ export default function SectionPage() {
 
         if (lastSegment === 'services') {
             newItem = {
+                id: current.length + 1,
+                slug: '',
+                icon: 'FileText',
                 title: '',
                 overview: '',
                 image: '',
                 description: '',
-                features: ['']
+                fullDescription: '',
+                features: [''],
+                button: 'Book a call',
+                link: '/contact'
             };
         } else if (lastSegment === 'faqs') {
             newItem = {
@@ -846,6 +865,232 @@ export default function SectionPage() {
         }
 
         if (typeof value === 'string') {
+            // Skip rendering the description field - we only use fullDescription
+            if (key === 'description') {
+                return null;
+            }
+
+            // Special handling for labels field (comma-separated tags)
+            if (key === 'labels') {
+                return (
+                    <div key={path} className="mb-4">
+                        <label className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                            {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                            <span className={`text-xs ml-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                (Separate with commas)
+                            </span>
+                        </label>
+                        <input
+                            type="text"
+                            value={value}
+                            onChange={(e) => handleInputChange(path, e.target.value)}
+                            placeholder="e.g. Technology, Innovation, Strategy"
+                            className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'}`}
+                        />
+                        {value && (
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {value.split(',').map((label: string, idx: number) => (
+                                    <span
+                                        key={idx}
+                                        className={`px-3 py-1 text-xs font-medium rounded-full ${theme === 'dark' ? 'bg-indigo-900/30 text-indigo-300' : 'bg-indigo-100 text-indigo-700'}`}
+                                    >
+                                        {label.trim()}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+
+            // Check if this is the fullDescription field for rich text editing
+            if (key === 'fullDescription') {
+                return (
+                    <div key={path} className="mb-6">
+                        <label className={`block text-sm font-semibold mb-3 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                            {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                        </label>
+
+                        {/* Strapi-like Toolbar */}
+                        <div className={`flex flex-wrap items-center gap-2 p-3 border-2 rounded-t-lg ${theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
+                            {/* Block Type Dropdown */}
+                            <select
+                                onChange={(e) => {
+                                    const editor = document.querySelector(`[data-path="${path}"]`) as HTMLDivElement;
+                                    if (editor) {
+                                        editor.focus();
+                                        document.execCommand('formatBlock', false, e.target.value);
+                                        e.target.value = 'p'; // Reset to default
+                                    }
+                                }}
+                                defaultValue="p"
+                                className={`px-3 py-1.5 rounded border text-sm font-medium ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-700'}`}
+                                title="Choose text style"
+                            >
+                                <option value="p">📄 Normal Text</option>
+                                <option value="h1">📌 Large Heading</option>
+                                <option value="h2">📍 Medium Heading</option>
+                                <option value="h3">📎 Small Heading</option>
+                                <option value="h4">🔸 Heading 4</option>
+                                <option value="h5">🔹 Heading 5</option>
+                                <option value="h6">▪️ Heading 6</option>
+                                <option value="blockquote">💬 Quote</option>
+                            </select>
+
+                            <div className={`w-px h-6 ${theme === 'dark' ? 'bg-gray-600' : 'bg-gray-300'}`} />
+
+                            {/* Text Formatting */}
+                            <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    document.execCommand('bold', false);
+                                }}
+                                className={`px-3 py-1.5 rounded font-bold text-sm ${theme === 'dark' ? 'hover:bg-gray-700 text-white' : 'hover:bg-white text-gray-700 border border-gray-300'}`}
+                                title="Bold"
+                            >
+                                B
+                            </button>
+                            <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    document.execCommand('italic', false);
+                                }}
+                                className={`px-3 py-1.5 rounded italic text-sm ${theme === 'dark' ? 'hover:bg-gray-700 text-white' : 'hover:bg-white text-gray-700 border border-gray-300'}`}
+                                title="Italic"
+                            >
+                                I
+                            </button>
+                            <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    document.execCommand('underline', false);
+                                }}
+                                className={`px-3 py-1.5 rounded underline text-sm ${theme === 'dark' ? 'hover:bg-gray-700 text-white' : 'hover:bg-white text-gray-700 border border-gray-300'}`}
+                                title="Underline"
+                            >
+                                U
+                            </button>
+                            <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    document.execCommand('strikeThrough', false);
+                                }}
+                                className={`px-3 py-1.5 rounded line-through text-sm ${theme === 'dark' ? 'hover:bg-gray-700 text-white' : 'hover:bg-white text-gray-700 border border-gray-300'}`}
+                                title="Strikethrough"
+                            >
+                                S
+                            </button>
+
+                            <div className={`w-px h-6 ${theme === 'dark' ? 'bg-gray-600' : 'bg-gray-300'}`} />
+
+                            {/* Lists */}
+                            <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    document.execCommand('insertUnorderedList', false);
+                                }}
+                                className={`px-3 py-1.5 rounded text-sm ${theme === 'dark' ? 'hover:bg-gray-700 text-white' : 'hover:bg-white text-gray-700 border border-gray-300'}`}
+                                title="Bullet List"
+                            >
+                                • List
+                            </button>
+                            <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    document.execCommand('insertOrderedList', false);
+                                }}
+                                className={`px-3 py-1.5 rounded text-sm ${theme === 'dark' ? 'hover:bg-gray-700 text-white' : 'hover:bg-white text-gray-700 border border-gray-300'}`}
+                                title="Numbered List"
+                            >
+                                1. List
+                            </button>
+
+                            <div className={`w-px h-6 ${theme === 'dark' ? 'bg-gray-600' : 'bg-gray-300'}`} />
+
+                            {/* Insert */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const editor = document.querySelector(`[data-path="${path}"]`) as HTMLDivElement;
+                                    if (editor) {
+                                        const selection = window.getSelection();
+                                        const selectedText = selection?.toString() || 'link text';
+                                        setLinkData({ text: selectedText, url: '', path, start: 0, end: 0 });
+                                        setRichTextPath(path);
+                                        setShowLinkModal(true);
+                                    }
+                                }}
+                                className={`px-3 py-1.5 rounded text-sm ${theme === 'dark' ? 'hover:bg-gray-700 text-white' : 'hover:bg-white text-gray-700 border border-gray-300'}`}
+                                title="Insert Link"
+                            >
+                                🔗 Link
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const editor = document.querySelector(`[data-path="${path}"]`) as HTMLDivElement;
+                                    if (editor) {
+                                        editor.focus();
+                                        const selection = window.getSelection();
+                                        if (selection && selection.rangeCount > 0) {
+                                            setSavedSelection(selection.getRangeAt(0).cloneRange());
+                                        }
+                                    }
+                                    setImageData({ url: '', alt: '', path, start: 0, file: null });
+                                    setRichTextPath(path);
+                                    setShowImageModal(true);
+                                }}
+                                className={`px-3 py-1.5 rounded text-sm ${theme === 'dark' ? 'hover:bg-gray-700 text-white' : 'hover:bg-white text-gray-700 border border-gray-300'}`}
+                                title="Insert Image"
+                            >
+                                🖼️ Image
+                            </button>
+                        </div>
+
+                        {/* Simple WYSIWYG Editor */}
+                        <div
+                            data-path={path}
+                            contentEditable={true}
+                            suppressContentEditableWarning={true}
+                            ref={(el) => {
+                                if (el && !el.hasAttribute('data-initialized')) {
+                                    el.innerHTML = value || '<p>Start typing...</p>';
+                                    el.setAttribute('data-initialized', 'true');
+                                }
+                            }}
+                            onBlur={(e) => {
+                                const htmlContent = e.currentTarget.innerHTML;
+                                if (htmlContent !== value) {
+                                    handleInputChange(path, htmlContent);
+                                }
+                            }}
+                            className={`w-full px-5 py-4 border-2 border-t-0 rounded-b-lg prose prose-lg max-w-none min-h-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 overflow-auto ${theme === 'dark' ? 'bg-gray-800 border-gray-600 text-gray-100 prose-invert' : 'bg-white border-gray-300 text-gray-900'}`}
+                            style={{ cursor: 'text', lineHeight: '1.75' }}
+                        />
+                        <div className={`mt-3 p-3 rounded-lg ${theme === 'dark' ? 'bg-blue-900/20 border border-blue-800' : 'bg-blue-50 border border-blue-200'}`}>
+                            <p className={`text-sm font-medium mb-2 ${theme === 'dark' ? 'text-blue-300' : 'text-blue-800'}`}>
+                                📝 How to use this editor:
+                            </p>
+                            <ul className={`text-xs space-y-1 ml-4 list-disc ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>
+                                <li><strong>Type freely</strong> - Click anywhere and start typing</li>
+                                <li><strong>Change style</strong> - Select "Normal Text" dropdown to choose Heading 1, 2, 3, etc.</li>
+                                <li><strong>Format text</strong> - Select text, then click B (bold), I (italic), U (underline)</li>
+                                <li><strong>Add lists</strong> - Click bullet or numbered list button</li>
+                                <li><strong>Insert link</strong> - Select text, click 🔗 Link button, enter URL</li>
+                                <li><strong>Add image</strong> - Click 🖼️ Image button, upload file or paste URL</li>
+                                <li><strong>New paragraph</strong> - Press Enter key</li>
+                            </ul>
+                        </div>
+                    </div>
+                );
+            }
+
             return (
                 <div key={path} className="mb-4">
                     <label className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -911,7 +1156,7 @@ export default function SectionPage() {
     }
 
     return (
-        <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+        <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
             {/* Download Modal */}
             {showDownloadModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -989,30 +1234,14 @@ export default function SectionPage() {
                 </div>
             )}
 
-            {/* Header */}
-            <header className={`shadow-sm ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-4">
-                        <div className="flex items-center gap-4">
-                            <Link href="/dashboard" className="text-indigo-600 hover:text-indigo-800">
-                                ← Back to Dashboard
-                            </Link>
-                            <h1 className="text-2xl font-bold">Edit {currentSection.name}</h1>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <span>Welcome, {user?.name}</span>
-                            <button
-                                onClick={() => setShowLogoutModal(true)}
-                                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <DashboardHeader
+                title={`Edit ${currentSection.name}`}
+                showBackButton={true}
+                backUrl="/dashboard"
+                backLabel="Back to Dashboard"
+            />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Edit Form */}
                     <div>
@@ -1300,6 +1529,244 @@ export default function SectionPage() {
                     </div>
                 </div>
             )}
+
+            {/* Link Modal */}
+            {showLinkModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+                    <div className={`relative z-10 p-6 rounded-lg shadow-xl max-w-xl w-full ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            🔗 Add Link
+                        </h3>
+                        <div className="space-y-4">
+                            <div>
+                                <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    Link Text
+                                </label>
+                                <input
+                                    type="text"
+                                    value={linkData.text}
+                                    onChange={(e) => setLinkData({ ...linkData, text: e.target.value })}
+                                    placeholder="Enter link text..."
+                                    className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                                />
+                            </div>
+                            <div>
+                                <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    URL
+                                </label>
+                                <input
+                                    type="url"
+                                    value={linkData.url}
+                                    onChange={(e) => setLinkData({ ...linkData, url: e.target.value })}
+                                    placeholder="https://example.com"
+                                    className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                                />
+                            </div>
+                            {linkData.text && linkData.url && (
+                                <div>
+                                    <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Preview:
+                                    </label>
+                                    <div className={`p-3 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
+                                        <a href={linkData.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                            {linkData.text}
+                                        </a>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex gap-3 justify-end mt-6">
+                            <button
+                                onClick={() => {
+                                    setShowLinkModal(false);
+                                    setLinkData({ text: '', url: '', path: '', start: 0, end: 0 });
+                                }}
+                                className={`px-4 py-2 rounded-md transition-colors ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    if (linkData.text && linkData.url) {
+                                        const editor = document.querySelector(`[data-path="${linkData.path}"]`) as HTMLDivElement;
+                                        if (editor) {
+                                            editor.focus();
+                                            const linkHtml = `<a href="${linkData.url}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">${linkData.text}</a>`;
+                                            document.execCommand('insertHTML', false, linkHtml);
+
+                                            // Update the state with new content
+                                            const currentValue = sectionData;
+                                            const keys = linkData.path.split('.');
+                                            let target = currentValue;
+                                            for (let i = 0; i < keys.length - 1; i++) {
+                                                target = target[keys[i]];
+                                            }
+                                            const lastKey = keys[keys.length - 1];
+                                            target[lastKey] = editor.innerHTML;
+                                            setSectionData({ ...currentValue });
+                                        }
+                                        setShowLinkModal(false);
+                                        setLinkData({ text: '', url: '', path: '', start: 0, end: 0 });
+                                    }
+                                }}
+                                disabled={!linkData.text || !linkData.url}
+                                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Insert Link
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Image Modal */}
+            {showImageModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+                    <div className={`relative z-10 p-6 rounded-lg shadow-xl max-w-xl w-full max-h-[90vh] overflow-y-auto ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            🖼️ Add Image
+                        </h3>
+                        <div className="space-y-4">
+                            <div>
+                                <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    Upload Image
+                                </label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            setImageData({ ...imageData, file, url: URL.createObjectURL(file) });
+                                        }
+                                    }}
+                                    className={`w-full px-3 py-2 border rounded-md text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700' : 'bg-white border-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700'}`}
+                                />
+                            </div>
+                            <div className="text-center text-gray-500">- OR -</div>
+                            <div>
+                                <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    Image URL
+                                </label>
+                                <input
+                                    type="url"
+                                    value={imageData.file ? '' : imageData.url}
+                                    onChange={(e) => setImageData({ ...imageData, url: e.target.value, file: null })}
+                                    placeholder="https://example.com/image.jpg"
+                                    disabled={!!imageData.file}
+                                    className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'} disabled:opacity-50`}
+                                />
+                            </div>
+                            <div>
+                                <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    Alt Text (Description)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={imageData.alt}
+                                    onChange={(e) => setImageData({ ...imageData, alt: e.target.value })}
+                                    placeholder="Describe the image..."
+                                    className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                                />
+                            </div>
+                            {imageData.url && (
+                                <div>
+                                    <label className={`block text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Preview:
+                                    </label>
+                                    <div className={`p-3 border rounded-md ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
+                                        <img src={imageData.url} alt={imageData.alt} className="w-full max-w-2xl rounded-lg" />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex gap-3 justify-end mt-6">
+                            <button
+                                onClick={() => {
+                                    setShowImageModal(false);
+                                    setImageData({ url: '', alt: '', path: '', start: 0, file: null });
+                                }}
+                                className={`px-4 py-2 rounded-md transition-colors ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    if (imageData.url) {
+                                        let finalImageUrl = imageData.url;
+
+                                        // Upload file if it's a file upload
+                                        if (imageData.file) {
+                                            const formData = new FormData();
+                                            formData.append('file', imageData.file);
+                                            formData.append('sectionName', currentSection!.name.toLowerCase().replace(' ', '-'));
+
+                                            try {
+                                                const response = await fetch('/api/upload', {
+                                                    method: 'POST',
+                                                    body: formData,
+                                                });
+
+                                                if (!response.ok) {
+                                                    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+                                                    throw new Error(errorData.error || 'Upload failed');
+                                                }
+
+                                                const result = await response.json();
+                                                finalImageUrl = result.path;
+                                                toast.success('Image uploaded successfully!');
+                                            } catch (error) {
+                                                console.error('Upload error:', error);
+                                                toast.error(error instanceof Error ? error.message : 'Upload failed');
+                                                return;
+                                            }
+                                        }
+
+                                        // Find the contentEditable div and insert the image at cursor position
+                                        const editor = document.querySelector(`[data-path="${imageData.path}"]`) as HTMLElement;
+                                        if (editor) {
+                                            editor.focus();
+
+                                            // Restore the saved selection/cursor position
+                                            if (savedSelection) {
+                                                const selection = window.getSelection();
+                                                if (selection) {
+                                                    selection.removeAllRanges();
+                                                    selection.addRange(savedSelection);
+                                                }
+                                            }
+
+                                            const imageHtml = `<img src="${finalImageUrl}" alt="${imageData.alt}" class="w-full max-w-2xl rounded-lg my-4" />`;
+                                            document.execCommand('insertHTML', false, imageHtml);
+
+                                            // Update the state with the new HTML content
+                                            const currentValue = sectionData;
+                                            const keys = imageData.path.split('.');
+                                            let target = currentValue;
+                                            for (let i = 0; i < keys.length - 1; i++) {
+                                                target = target[keys[i]];
+                                            }
+                                            const lastKey = keys[keys.length - 1];
+                                            target[lastKey] = editor.innerHTML;
+                                            setSectionData({ ...currentValue });
+                                        }
+
+                                        setShowImageModal(false);
+                                        setImageData({ url: '', alt: '', path: '', start: 0, file: null });
+                                        setSavedSelection(null);
+                                    }
+                                }}
+                                disabled={!imageData.url}
+                                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Insert Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <DashboardFooter />
         </div>
     );
 }

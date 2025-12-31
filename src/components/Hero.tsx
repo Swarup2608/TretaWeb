@@ -38,13 +38,22 @@ export default function Hero() {
         return null;
     }
 
+    // Fallback values
+    const backgroundImage = heroData.backgroundImage || '/images/hero/hero-img.png';
+    const heading1 = heroData.heading?.line1 || 'Treta';
+    const heading2 = heroData.heading?.line2 || 'Group';
+    const heading2Italic = heroData.heading?.line2Italic || '';
+    const description = heroData.description || '';
+    const ctaLabel = heroData.cta?.label || 'Contact Us';
+    const ctaLink = heroData.cta?.link || '/';
+
     return (
         <section className="relative min-h-screen flex flex-col px-4 sm:px-6 lg:px-8 ">
             {/* Animated Background Image with Overlay */}
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat hero-bg-animated cursor-zoom-in"
                 style={{
-                    backgroundImage: `linear-gradient(to bottom right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url(${heroData.backgroundImage})`
+                    backgroundImage: `linear-gradient(to bottom right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`
                 }}
                 onClick={() => setIsZoomed(true)}
             ></div>
@@ -52,7 +61,7 @@ export default function Hero() {
             {/* Zoom Overlay */}
             {isZoomed && (
                 <div
-                    className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center cursor-zoom-out animate-fade-in"
+                    className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center cursor-zoom-out animate-fade-in "
                     onClick={() => setIsZoomed(false)}
                 >
                     <div className="relative max-w-7xl max-h-[90vh] w-full h-full p-4 sm:p-8">
@@ -66,7 +75,7 @@ export default function Hero() {
                             </svg>
                         </button>
                         <img
-                            src={heroData.backgroundImage}
+                            src={backgroundImage}
                             alt="Hero Background"
                             className="w-full h-full object-contain animate-scale-in"
                         />
@@ -74,23 +83,25 @@ export default function Hero() {
                 </div>
             )}
 
-            <div className="relative z-10 max-w-full mx-auto w-full flex flex-col justify-center lg:pb-32 pt-40 min-h-screen">
+            <div className="relative z-10 mx-auto w-full flex flex-col justify-center lg:pb-32 pt-40 min-h-screen max-w-7xl">
                 {/* Main Content */}
                 <div className={`text-left max-w-3xl mb-8 lg:mb-20 ${isVisible ? 'animate-slide-up' : 'opacity-0'}`}>
                     <h1 className={`text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight hero-text transition-all duration-700 ${isVisible ? 'animate-slide-up animation-delay-200' : 'opacity-0'}`}>
-                        {heroData.heading.line1}{' '}
+                        {heading1}{' '}
                         <span className="block mt-2 transition-all duration-700 hover:text-blue-400">
-                            {heroData.heading.line2} <span className="italic font-serif hover:text-blue-300 transition-colors duration-300">{heroData.heading.line2Italic}</span>
+                            {heading2} {heading2Italic && <span className="italic font-serif hover:text-blue-300 transition-colors duration-300">{heading2Italic}</span>}
                         </span>
                     </h1>
-                    <p className={`text-lg sm:text-xl hero-text-muted mb-8 max-w-2xl transition-all duration-700 hover:text-white ${isVisible ? 'animate-slide-up animation-delay-400' : 'opacity-0'}`}>
-                        {heroData.description}
-                    </p>
+                    {description && (
+                        <p className={`text-lg sm:text-xl hero-text-muted mb-8 max-w-2xl transition-all duration-700 hover:text-white ${isVisible ? 'animate-slide-up animation-delay-400' : 'opacity-0'}`}>
+                            {description}
+                        </p>
+                    )}
                     <Link
-                        href={heroData.cta.link}
+                        href={ctaLink}
                         className={`inline-flex items-center gap-0 btn-hero rounded-full backdrop-blur-xl backdrop-saturate-150 transition-all duration-500 font-medium text-base sm:text-lg border hover:scale-105 hover:shadow-2xl hover:-translate-y-1 group ${isVisible ? 'animate-slide-up animation-delay-600' : 'opacity-0'}`}
                     >
-                        <span className="px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 group-hover:pr-2">{heroData.cta.label}</span>
+                        <span className="px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 group-hover:pr-2">{ctaLabel}</span>
                         <div className="btn-hero-icon p-3 sm:p-4 rounded-full transition-all duration-300  group-hover:rotate-45 mr-2">
                             <svg
                                 className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300"

@@ -7,6 +7,7 @@ import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
 import UserManagement from '@/components/UserManagement';
 import DashboardHeader from '@/components/DashboardHeader';
+import DashboardFooter from '@/components/DashboardFooter';
 import { getTotalVisits, getUniqueVisitors, getTopPages, getBounceRate, getAvgSessionDuration, trackPageVisit } from '@/utils/analytics';
 
 interface Section {
@@ -18,11 +19,12 @@ interface Section {
 const sections: Section[] = [
     { name: 'Hero', file: 'hero.json', description: 'Main hero section content' },
     { name: 'About', file: 'about.json', description: 'About section information' },
-    { name: 'Services', file: 'services.json', description: 'Services offered' },
+    { name: 'About Page', file: 'aboutPage.json', description: 'Complete About Us page with all sections' },
+    { name: 'Services', file: 'services.json', description: 'Services offered with banner and detail pages' },
     { name: 'Numbers', file: 'numbersHome.json', description: 'Statistics and numbers' },
     { name: 'Values', file: 'values.json', description: 'Company values' },
     { name: 'Case Studies', file: 'caseStudies.json', description: 'Case studies showcase' },
-    { name: 'FAQ', file: 'faq.json', description: 'Frequently asked questions' },
+    { name: 'Careers', file: 'careers.json', description: 'Careers and job opportunities' },
     { name: 'Footer', file: 'footer.json', description: 'Footer content' },
     { name: 'Header', file: 'header.json', description: 'Navigation and header' },
     { name: 'CTA', file: 'cta.json', description: 'Call to action content' },
@@ -31,7 +33,7 @@ const sections: Section[] = [
 ];
 
 export default function DashboardPage() {
-    const { user, token } = useAuth();
+    const { user, token, isLoading, logout } = useAuth();
     const { theme } = useTheme();
     const router = useRouter();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -44,6 +46,9 @@ export default function DashboardPage() {
     });
 
     useEffect(() => {
+        // Don't redirect while still loading
+        if (isLoading) return;
+
         if (!token) {
             router.push('/login');
         } else {
@@ -57,9 +62,9 @@ export default function DashboardPage() {
                 avgSessionDuration: getAvgSessionDuration()
             });
         }
-    }, [token, router]);
+    }, [token, router, isLoading]);
 
-    if (!token) {
+    if (isLoading || !token) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="loader"></div>
@@ -68,17 +73,17 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 text-gray-900'}`}>
+        <div className={`min-h-screen flex flex-col transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-linear-to-br from-gray-50 via-gray-100 to-gray-50 text-gray-900'}`}>
             <DashboardHeader title="Dashboard" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Analytics Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div className={`group p-6 rounded-2xl shadow-lg card-hover animate-fade-in ${theme === 'dark' ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-white to-gray-50'} border-2 border-transparent hover:border-indigo-500/50 transition-all duration-300`}>
+                    <div className={`group p-6 rounded-2xl shadow-lg card-hover animate-fade-in ${theme === 'dark' ? 'bg-linear-to-br from-gray-800 to-gray-900' : 'bg-linear-to-br from-white to-gray-50'} border-2 border-transparent hover:border-indigo-500/50 transition-all duration-300`}>
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-sm font-medium mb-2 opacity-70">Total Visits</h3>
-                                <p className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">{analytics.totalVisits.toLocaleString()}</p>
+                                <p className="text-3xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">{analytics.totalVisits.toLocaleString()}</p>
                                 <p className="text-xs mt-2 text-green-500 font-medium flex items-center gap-1">
                                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -86,7 +91,7 @@ export default function DashboardPage() {
                                     +12.5%
                                 </p>
                             </div>
-                            <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <div className="p-4 rounded-2xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
                                 <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                     <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
@@ -94,11 +99,11 @@ export default function DashboardPage() {
                             </div>
                         </div>
                     </div>
-                    <div className={`group p-6 rounded-2xl shadow-lg card-hover animate-fade-in animate-delay-100 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-white to-gray-50'} border-2 border-transparent hover:border-emerald-500/50 transition-all duration-300`}>
+                    <div className={`group p-6 rounded-2xl shadow-lg card-hover animate-fade-in animate-delay-100 ${theme === 'dark' ? 'bg-linear-to-br from-gray-800 to-gray-900' : 'bg-linear-to-br from-white to-gray-50'} border-2 border-transparent hover:border-emerald-500/50 transition-all duration-300`}>
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-sm font-medium mb-2 opacity-70">Unique Visitors</h3>
-                                <p className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{analytics.uniqueVisitors.toLocaleString()}</p>
+                                <p className="text-3xl font-bold bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{analytics.uniqueVisitors.toLocaleString()}</p>
                                 <p className="text-xs mt-2 text-green-500 font-medium flex items-center gap-1">
                                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -106,18 +111,18 @@ export default function DashboardPage() {
                                     +8.2%
                                 </p>
                             </div>
-                            <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <div className="p-4 rounded-2xl bg-linear-to-br from-emerald-500 to-teal-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
                                 <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                 </svg>
                             </div>
                         </div>
                     </div>
-                    <div className={`group p-6 rounded-2xl shadow-lg card-hover animate-fade-in animate-delay-200 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-white to-gray-50'} border-2 border-transparent hover:border-orange-500/50 transition-all duration-300`}>
+                    <div className={`group p-6 rounded-2xl shadow-lg card-hover animate-fade-in animate-delay-200 ${theme === 'dark' ? 'bg-linear-to-br from-gray-800 to-gray-900' : 'bg-linear-to-br from-white to-gray-50'} border-2 border-transparent hover:border-orange-500/50 transition-all duration-300`}>
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-sm font-medium mb-2 opacity-70">Bounce Rate</h3>
-                                <p className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{analytics.bounceRate}</p>
+                                <p className="text-3xl font-bold bg-linear-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{analytics.bounceRate}</p>
                                 <p className="text-xs mt-2 text-green-500 font-medium flex items-center gap-1">
                                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -125,18 +130,18 @@ export default function DashboardPage() {
                                     -5.3% Better
                                 </p>
                             </div>
-                            <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <div className="p-4 rounded-2xl bg-linear-to-br from-orange-500 to-red-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
                                 <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                 </svg>
                             </div>
                         </div>
                     </div>
-                    <div className={`group p-6 rounded-2xl shadow-lg card-hover animate-fade-in animate-delay-300 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-white to-gray-50'} border-2 border-transparent hover:border-blue-500/50 transition-all duration-300`}>
+                    <div className={`group p-6 rounded-2xl shadow-lg card-hover animate-fade-in animate-delay-300 ${theme === 'dark' ? 'bg-linear-to-br from-gray-800 to-gray-900' : 'bg-linear-to-br from-white to-gray-50'} border-2 border-transparent hover:border-blue-500/50 transition-all duration-300`}>
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-sm font-medium mb-2 opacity-70">Avg Session</h3>
-                                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">{analytics.avgSessionDuration}</p>
+                                <p className="text-3xl font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">{analytics.avgSessionDuration}</p>
                                 <p className="text-xs mt-2 text-green-500 font-medium flex items-center gap-1">
                                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -144,7 +149,7 @@ export default function DashboardPage() {
                                     +15.7%
                                 </p>
                             </div>
-                            <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <div className="p-4 rounded-2xl bg-linear-to-br from-blue-500 to-cyan-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
                                 <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                                 </svg>
@@ -288,6 +293,7 @@ export default function DashboardPage() {
                     </div>
                 </div>
             )}
+            <DashboardFooter />
         </div>
     );
 }

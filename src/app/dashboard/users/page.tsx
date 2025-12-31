@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
+import DashboardHeader from '@/components/DashboardHeader';
+import DashboardFooter from '@/components/DashboardFooter';
 import UserManagement from '@/components/UserManagement';
 
 interface User {
@@ -16,7 +18,7 @@ interface User {
 }
 
 export default function UsersPage() {
-    const { user, token } = useAuth();
+    const { user, token, isLoading } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const router = useRouter();
     const [users, setUsers] = useState<User[]>([]);
@@ -30,12 +32,15 @@ export default function UsersPage() {
     const [editLoading, setEditLoading] = useState(false);
 
     useEffect(() => {
+        // Don't redirect while still loading
+        if (isLoading) return;
+
         if (!token) {
             router.push('/login');
         } else {
             loadUsers();
         }
-    }, [token, router]);
+    }, [token, router, isLoading]);
 
     const loadUsers = async () => {
         try {
@@ -155,41 +160,15 @@ export default function UsersPage() {
     const isSuperadmin = user?.role === 'superadmin';
 
     return (
-        <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50 text-gray-900'}`}>
-            {/* Header with Theme Toggle */}
-            <header className={`shadow-lg animate-fade-in ${theme === 'dark' ? 'bg-gray-800/80 backdrop-blur-md' : 'bg-white/80 backdrop-blur-md'} sticky top-0 z-50`}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-4">
-                        <div className="flex items-center gap-4 animate-slide-in">
-                            <Link href="/dashboard" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors duration-200 flex items-center gap-2 font-medium group">
-                                <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                                </svg>
-                                Dashboard
-                            </Link>
-                            <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Users Management</h1>
-                        </div>
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 animate-slide-in animate-delay-100"
-                            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-                        >
-                            {theme === 'dark' ? (
-                                <svg className="w-6 h-6 text-yellow-400 animate-scale-in" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-                                </svg>
-                            ) : (
-                                <svg className="w-6 h-6 text-gray-700 animate-scale-in" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                                </svg>
-                            )}
-                        </button>
-                    </div>
-                </div>
-            </header>
+        <div className={`min-h-screen flex flex-col transition-colors duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50 text-gray-900'}`}>
+            <DashboardHeader
+                title="Users Management"
+                showBackButton={true}
+                backUrl="/dashboard"
+                backLabel="Back to Dashboard"
+            />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Messages */}
+            <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">{/* Messages */}
                 {message && (
                     <div className={`mb-6 p-4 rounded-xl shadow-lg animate-fade-in ${theme === 'dark' ? 'bg-gradient-to-r from-green-900/30 to-emerald-900/30 border-2 border-green-600' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200'}`}>
                         <div className="flex items-center gap-2">
@@ -414,6 +393,7 @@ export default function UsersPage() {
                     </div>
                 )}
             </div>
+            <DashboardFooter />
         </div>
     );
 }

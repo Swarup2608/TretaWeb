@@ -5,8 +5,8 @@ import { verifyAuth } from '@/utils/auth';
 
 // Allowed sections that can be updated
 const ALLOWED_SECTIONS = [
-    'hero', 'about', 'services', 'numbersHome', 'values', 
-    'caseStudies', 'faq', 'footer', 'header', 'cta', 'meta'
+    'hero', 'about', 'aboutPage', 'services', 'numbersHome', 'values', 
+    'caseStudies', 'careers', 'footer', 'header', 'cta', 'meta'
 ];
 
 export async function POST(request: NextRequest) {

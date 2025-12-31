@@ -8,11 +8,11 @@ export default function NotFound() {
     return (
         <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+            <main className="grow flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-linear-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
                 <div className="text-center max-w-2xl mx-auto py-16">
                     {/* 404 Animation */}
                     <div className="mb-8 animate-fade-in">
-                        <h1 className="text-9xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-pulse-slow">
+                        <h1 className="text-9xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-pulse-slow">
                             404
                         </h1>
                     </div>
@@ -31,7 +31,7 @@ export default function NotFound() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up animation-delay-400">
                         <Link
                             href="/"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-2xl font-semibold hover:scale-105"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-2xl font-semibold hover:scale-105"
                         >
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-9 9a1 1 0 001.414 1.414L2 12.414V19a1 1 0 001 1h3a1 1 0 001-1v-3a1 1 0 011-1h2a1 1 0 011 1v3a1 1 0 001 1h3a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-9-9z" />

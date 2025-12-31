@@ -1,0 +1,144 @@
+{
+  "banner": {
+    "backgroundImage": "/images/about/banner.jpg",
+    "eyebrow": "[About Us]",
+    "heading": "Intelligence That Inspires",
+    "headingItalic": "Growth"
+  },
+  "moreAboutUs": {
+    "eyebrow": "[More About Us]",
+    "heading": "We Believe In Results With Smart",
+    "headingItalic": "Consulting.",
+    "description": "At Optimo, we believe that real business growth is rooted in strategy, insight, and execution. As a results-driven consulting firm for you.",
+    "subDescription": "Our approach blends deep industry insight, extensive experience, and strategic thinking to solve complex challenges, innovation, and deliver measurable, lasting business value",
+    "image": "/images/about/consultant.jpg",
+    "services": [
+      {
+        "id": 1,
+        "icon": "Puzzle",
+        "title": "Strategic Planning",
+        "description": "Define clear goals and chart the path."
+      },
+      {
+        "id": 2,
+        "icon": "TrendingUp",
+        "title": "Operational Growth",
+        "description": "Streamline processes to scale efficiently."
+      },
+      {
+        "id": 3,
+        "icon": "Lightbulb",
+        "title": "Digital Evolution",
+        "description": "Leverage technology to transform."
+      }
+    ]
+  },
+  "mission": {
+    "eyebrow": "[Our Mission]",
+    "heading": "Built to Drive Real Business",
+    "headingItalic": "Growth",
+    "description": "At Optimo, our mission is to empower businesses with strategic solutions that drive growth, efficiency, and transformation.",
+    "image": "/images/about/mission.jpg",
+    "points": [
+      {
+        "id": 1,
+        "text": "Deliver results-driven strategies aligned with your goals"
+      },
+      {
+        "id": 2,
+        "text": "Empower organizations to grow and lead in a changing market"
+      },
+      {
+        "id": 3,
+        "text": "Foster partnerships built on trust and measurable impact"
+      }
+    ]
+  },
+  "vision": {
+    "eyebrow": "[Our Vision]",
+    "heading": "Shaping The Future of Business",
+    "headingItalic": "Success",
+    "description": "At Optimo, our mission is to empower businesses with strategic solutions that drive growth, efficiency, and transformation.",
+    "image": "/images/about/vision.jpg",
+    "points": [
+      {
+        "id": 1,
+        "text": "Innovate continuously to stay ahead in a changing market"
+      },
+      {
+        "id": 2,
+        "text": "Empower businesses to lead with confidence and clarity"
+      },
+      {
+        "id": 3,
+        "text": "Build sustainable growth through forward-thinking strategies"
+      }
+    ]
+  },
+  "process": {
+    "eyebrow": "[Our Process]",
+    "heading": "Step-by-Step to",
+    "headingItalic": "Business Growth",
+    "subheading": "How We Turn Strategy Into Measurable Success",
+    "steps": [
+      {
+        "id": 1,
+        "number": "01",
+        "icon": "Search",
+        "title": "Discover & Diagnose",
+        "description": "We begin by deeply understanding your organization's unique challenges, opportunities, and goals"
+      },
+      {
+        "id": 2,
+        "number": "02",
+        "icon": "Puzzle",
+        "title": "Strategize & Plan",
+        "description": "With insights in hand, we co-create a tailored strategy that aligns with your business objectives."
+      },
+      {
+        "id": 3,
+        "number": "03",
+        "icon": "Rocket",
+        "title": "Implement & Optimize",
+        "description": "We translate strategy into action by deploying solutions, streamlining processes, and enabling teams."
+      }
+    ]
+  },
+  "team": {
+    "eyebrow": "[Team Members]",
+    "heading": "Meet the Beautiful team behind",
+    "headingItalic": "Optimo",
+    "members": [
+      {
+        "id": 1,
+        "name": "David Chen",
+        "role": "Consultant",
+        "image": "/images/about/team1.jpg",
+        "social": {
+          "twitter": "#",
+          "linkedin": "#"
+        }
+      },
+      {
+        "id": 2,
+        "name": "David Chen",
+        "role": "Consultant",
+        "image": "/images/about/team2.jpg",
+        "social": {
+          "twitter": "#",
+          "linkedin": "#"
+        }
+      },
+      {
+        "id": 3,
+        "name": "David Chen",
+        "role": "Consultant",
+        "image": "/images/about/team3.jpg",
+        "social": {
+          "twitter": "#",
+          "linkedin": "#"
+        }
+      }
+    ]
+  }
+}

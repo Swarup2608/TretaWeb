@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 
 export function ClientLayout({ children }: { children: ReactNode }) {
     const pathname = usePathname();
-    const isDashboardOrAdmin = pathname.startsWith('/dashboard') || pathname === '/login';
+    const isDashboardOrAdmin = pathname.startsWith('/dashboard') || pathname === '/login' || pathname === '/reset-password';
 
     return (
         <>
@@ -15,7 +15,7 @@ export function ClientLayout({ children }: { children: ReactNode }) {
             <main className="">
                 {children}
             </main>
-            <Footer />
+            {!isDashboardOrAdmin && <Footer />}
         </>
     );
 }

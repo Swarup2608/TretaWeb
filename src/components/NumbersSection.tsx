@@ -34,13 +34,17 @@ export default function NumbersSection() {
     useEffect(() => {
         if (!numbersData) return;
 
+        // Filter valid stats first
+        const validStats = numbersData.stats?.filter(s => s.number && s.description) || [];
+        if (validStats.length === 0) return;
+
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting && !isVisible) {
                     setIsVisible(true);
 
                     // Animate numbers
-                    numbersData.stats.forEach((stat, index) => {
+                    validStats.forEach((stat, index) => {
                         const numericValue = parseInt(stat.number.replace(/\D/g, ''));
                         if (numericValue) {
                             const duration = 2000;
@@ -68,9 +72,19 @@ export default function NumbersSection() {
         }
 
         return () => observer.disconnect();
-    }, [numbersData, isVisible]);
+    }, [numbersData]);
 
     if (!numbersData) {
+        return null;
+    }
+
+    // Fallback values
+    const heading = numbersData.heading || '';
+    const description = numbersData.description || '';
+    const stats = numbersData.stats?.filter((s: Stat) => s.number && s.description) || [];
+
+    // Skip entire section if no stats
+    if (stats.length === 0) {
         return null;
     }
 
@@ -78,26 +92,31 @@ export default function NumbersSection() {
         <section ref={sectionRef} className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className={`text-center mb-6 sm:mb-8 ${isVisible ? 'animate-slide-up' : 'opacity-0'}`}>
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold card-text mx-auto max-w-full lg:max-w-[50%] leading-tight">
-                        {numbersData.heading}
-                    </h2>
-                </div>
+                {heading && (
+                    <div className={`text-center mb-6 sm:mb-8 ${isVisible ? 'animate-slide-up' : 'opacity-0'}`}>
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold card-text mx-auto max-w-full lg:max-w-[50%] leading-tight">
+                            {heading}
+                        </h2>
+                    </div>
+                )}
 
                 {/* Description */}
-                <div className={`text-center mb-12 sm:mb-16 lg:mb-20 ${isVisible ? 'animate-slide-up animation-delay-200' : 'opacity-0'}`}>
-                    <p className="text-base sm:text-lg lg:text-xl card-text-muted mx-auto max-w-full lg:max-w-[75%] leading-relaxed">
-                        {numbersData.description}
-                    </p>
-                </div>
+                {description && (
+                    <div className={`text-center mb-12 sm:mb-16 lg:mb-20 ${isVisible ? 'animate-slide-up animation-delay-200' : 'opacity-0'}`}>
+                        <p className="text-base sm:text-lg lg:text-xl card-text-muted mx-auto max-w-full lg:max-w-[75%] leading-relaxed">
+                            {description}
+                        </p>
+                    </div>
+                )}
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                    {numbersData.stats.map((stat, index) => {
+                    {stats.map((stat, index) => {
                         // Capitalize first letter for case-insensitive icon lookup
-                        const iconName = stat.icon.charAt(0).toUpperCase() + stat.icon.slice(1);
-                        const IconComponent = (LucideIcons as any)[iconName];
+                        const iconName = stat.icon?.charAt(0).toUpperCase() + stat.icon?.slice(1);
+                        const IconComponent = iconName ? (LucideIcons as any)[iconName] : null;
                         const suffix = stat.number.replace(/\d/g, '');
+                        const firstLetter = stat.description?.charAt(0).toUpperCase() || '0';
                         const displayNumber = animatedNumbers[index] || 0;
                         const colorClass = iconColorClasses[index];
                         const hoverClass = hoverTextClasses[index];
