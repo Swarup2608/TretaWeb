@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import CTA from './CTA';
 import CaseStudiesSkeleton from './CaseStudiesSkeleton';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, ArrowLeftCircle, ArrowUpRight } from 'lucide-react';
 
 interface CaseStudy {
     id: number;
@@ -34,6 +34,8 @@ export default function CaseStudiesPage({
     const [selectedLabel, setSelectedLabel] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('date-desc');
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 6;
 
     const allLabels = useMemo(() => {
         const labels = new Set<string>();
@@ -78,6 +80,14 @@ export default function CaseStudiesPage({
             }
         });
     }, [data.caseStudies, selectedLabel, searchQuery, sortBy]);
+
+    // Pagination logic
+    const totalPages = Math.ceil(filteredStudies.length / pageSize);
+    const paginatedStudies = filteredStudies.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+    // Reset to first page when filters/search change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useMemo(() => { setCurrentPage(1); }, [selectedLabel, searchQuery, sortBy]);
 
     if (!data) return <CaseStudiesSkeleton />;
 
@@ -156,78 +166,109 @@ export default function CaseStudiesPage({
 
                     {/* Results Count */}
                     <div className="mt-6 text-sm text-muted-light">
-                        Showing {filteredStudies.length} of {data.caseStudies?.length || 0} case studies
+                        Showing {paginatedStudies.length} of {filteredStudies.length || 0} case studies
                     </div>
                 </div>
             </section>
 
             {/* Case Studies Grid */}
-            <section className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
+            <section className="py-2 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     {filteredStudies.length === 0 ? (
                         <div className="text-center py-12">
                             <p className="text-xl text-muted-light">No case studies found matching your criteria.</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                            {filteredStudies.map((study, index) => (
-                                <div
-                                    key={study.id}
-                                    className="case-study-card-animate"
-                                    style={{ animationDelay: `${index * 100}ms` }}
-                                >
-                                    <div className="relative rounded-3xl overflow-hidden h-100 sm:h-112.5 lg:h-125 case-study-card-bg shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-2 has-[a:hover]:translate-y-0">
-                                        {/* Image Container */}
-                                        <div className="absolute inset-0 overflow-hidden">
-                                            <div
-                                                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                                                style={{ backgroundImage: `url(${study.image || '/images/hero/hero-img.png'})` }}
-                                            ></div>
-                                            {/* Overlay */}
-                                            <div className="case-study-overlay"></div>
-                                        </div>
+                        <>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                                {paginatedStudies.map((study, index) => (
+                                    <div
+                                        key={study.id}
+                                        className="case-study-card-animate"
+                                        style={{ animationDelay: `${index * 100}ms` }}
+                                    >
+                                        <div className="relative rounded-3xl overflow-hidden h-100 sm:h-112.5 lg:h-125 case-study-card-bg shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-2 has-[a:hover]:translate-y-0">
+                                            {/* Image Container */}
+                                            <div className="absolute inset-0 overflow-hidden">
+                                                <div
+                                                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                                    style={{ backgroundImage: `url(${study.image || '/images/hero/hero-img.png'})` }}
+                                                ></div>
+                                                {/* Overlay */}
+                                                <div className="case-study-overlay"></div>
+                                            </div>
 
-                                        {/* Content Box - Positioned absolutely on top */}
-                                        <div className="absolute bottom-0 left-0 right-0 p-7 sm:p-8 rounded-3xl m-5 case-study-content-bg backdrop-blur-md transition-all duration-400 ease-out flex flex-col justify-start z-2 sm:h-auto sm:min-h-22.5 group-hover:sm:min-h-75">
-                                            {/* Labels - Subtle display */}
-                                            {study.labels && (
-                                                <div className="flex flex-wrap gap-2 mb-3 shrink-0">
-                                                    {study.labels.split(',').slice(0, 5).map((label: string, idx: number) => (
-                                                        <span
-                                                            key={idx}
-                                                            className="px-2.5 py-1 text-xs font-medium bg-primary text-white backdrop-blur-sm rounded-full"
-                                                        >
-                                                            {label.trim()}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            )}
+                                            {/* Content Box - Positioned absolutely on top */}
+                                            <div className="absolute bottom-0 left-0 right-0 p-7 sm:p-8 rounded-3xl m-5 case-study-content-bg backdrop-blur-md transition-all duration-400 ease-out flex flex-col justify-start z-2 sm:h-auto sm:min-h-22.5 group-hover:sm:min-h-75">
+                                                {/* Labels - Subtle display */}
+                                                {study.labels && (
+                                                    <div className="flex flex-wrap gap-2 mb-3 shrink-0">
+                                                        {study.labels.split(',').slice(0, 5).map((label: string, idx: number) => (
+                                                            <span
+                                                                key={idx}
+                                                                className="px-2.5 py-1 text-xs font-medium bg-primary text-white backdrop-blur-sm rounded-full"
+                                                            >
+                                                                {label.trim()}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
 
-                                            {/* Title - Always visible */}
-                                            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold leading-tight mb-0 sm:mb-3 shrink-0 case-study-title-color">
-                                                {study.title || 'Untitled Case Study'}
-                                            </h3>
+                                                {/* Title - Always visible */}
+                                                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold leading-tight mb-0 sm:mb-3 shrink-0 case-study-title-color">
+                                                    {study.title || 'Untitled Case Study'}
+                                                </h3>
 
-                                            {/* Description - Always visible on mobile, visible on hover for desktop */}
-                                            <p className="case-study-description-text leading-relaxed text-[0.9375rem] sm:text-base mt-4 mb-5 sm:opacity-0 sm:max-h-0 sm:m-0 sm:overflow-hidden sm:translate-y-5 group-hover:sm:opacity-100 group-hover:sm:max-h-50 group-hover:sm:mt-4 group-hover:sm:mb-6 group-hover:sm:translate-y-0 transition-all duration-400 ease-out shrink-0">
-                                                {study.description || ''}
-                                            </p>
+                                                {/* Description - Always visible on mobile, visible on hover for desktop */}
+                                                <p className="case-study-description-text leading-relaxed text-[0.9375rem] sm:text-base mt-4 mb-5 sm:opacity-0 sm:max-h-0 sm:m-0 sm:overflow-hidden sm:translate-y-5 group-hover:sm:opacity-100 group-hover:sm:max-h-50 group-hover:sm:mt-4 group-hover:sm:mb-6 group-hover:sm:translate-y-0 transition-all duration-400 ease-out shrink-0">
+                                                    {study.description || ''}
+                                                </p>
 
-                                            {/* Button - Always visible on mobile, visible on hover for desktop */}
-                                            <Link
-                                                href={study.slug ? `/case-study/${study.slug}` : '/'}
-                                                className="inline-flex items-center gap-3 rounded-full w-fit shrink-0 sm:hidden sm:max-h-0 sm:overflow-hidden sm:translate-y-5 group-hover:sm:flex group-hover:sm:max-h-25 group-hover:sm:translate-y-0 transition-all duration-400 ease-out case-study-btn-wrapper group/button px-6 py-3.5 font-semibold text-base text-white"
-                                            >
-                                                View Case Study
-                                                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover/button:rotate-45 bg-white text-primary">
-                                                    <ArrowUpRight className="w-4 h-4 faq-cta-icon" />
-                                                </div>
-                                            </Link>
+                                                {/* Button - Always visible on mobile, visible on hover for desktop */}
+                                                <Link
+                                                    href={study.slug ? `/case-study/${study.slug}` : '/'}
+                                                    className="inline-flex items-center gap-3 rounded-full w-fit shrink-0 sm:hidden sm:max-h-0 sm:overflow-hidden sm:translate-y-5 group-hover:sm:flex group-hover:sm:max-h-25 group-hover:sm:translate-y-0 transition-all duration-400 ease-out case-study-btn-wrapper group/button px-6 py-3.5 font-semibold text-base text-white"
+                                                >
+                                                    View Case Study
+                                                    <div className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover/button:rotate-45 bg-white text-primary">
+                                                        <ArrowUpRight className="w-4 h-4 faq-cta-icon" />
+                                                    </div>
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+                            {/* Pagination Controls */}
+                            {totalPages > 1 && (
+                                <div className="flex justify-center mt-10 gap-2">
+                                    <button
+                                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                                        disabled={currentPage === 1}
+                                        className={`group relative flex items-center  rounded-full font-medium transition-all duration-200 focus:outline-none ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-foreground  hover:scale-105 active:scale-95 cursor-pointer'}`}
+                                    >
+                                        <span ><ArrowLeftCircle className="w-10 h-10" /></span>
+                                    </button>
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                        <button
+                                            key={page}
+                                            onClick={() => setCurrentPage(page)}
+                                            className={`mx-1 px-4 py-2 rounded-full border-2 font-semibold shadow-2xl cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 ${currentPage === page ? 'bg-primary text-white border-primary hover:scale-105 active:scale-95' : 'bg-white text-primary border-primary hover:scale-110 active:scale-110 '}`}
+                                            style={{ minWidth: 40 }}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                    <button
+                                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className={`group relative flex items-center rounded-full font-medium transition-all duration-200 focus:outline-none ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-foreground  hover:scale-105 active:scale-95 cursor-pointer '}`}
+                                    >
+                                        <span><ArrowLeftCircle className="w-10 h-10 rotate-180" /></span>
+                                    </button>
                                 </div>
-                            ))}
-                        </div>
+                            )}
+                        </>
                     )}
                 </div>
                 <CTA />

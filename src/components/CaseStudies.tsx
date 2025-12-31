@@ -46,9 +46,20 @@ export default function CaseStudies() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+
     if (!data) return null;
 
-    const totalPages = Math.ceil(data.caseStudies.length / itemsPerView);
+    // Sort by uploadDate descending and take only the 10 latest
+    const studiesWithDate = data.caseStudies
+        .map((study: any) => ({
+            ...study,
+            uploadDate: (study as any).uploadDate || '1970-01-01',
+        }));
+    const latestStudies = studiesWithDate
+        .sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime())
+        .slice(0, 10);
+
+    const totalPages = Math.ceil(latestStudies.length / itemsPerView);
     const maxIndex = totalPages - 1;
 
     const handlePrev = () => {
@@ -103,7 +114,7 @@ export default function CaseStudies() {
                                         : `translateX(calc(-${currentIndex * 100}% - ${currentIndex * 24}px))`,
                             }}
                         >
-                            {data.caseStudies.map((study, index) => (
+                            {latestStudies.map((study, index) => (
                                 <div
                                     key={index}
                                     className="shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] case-study-card-animate"
@@ -176,7 +187,7 @@ export default function CaseStudies() {
 
                         {/* Navigation Dots */}
                         <div className="flex gap-2">
-                            {Array.from({ length: Math.ceil(data.caseStudies.length / itemsPerView) }).map((_, index) => (
+                            {Array.from({ length: Math.ceil(latestStudies.length / itemsPerView) }).map((_, index) => (
                                 <button
                                     key={index}
                                     onClick={() => setCurrentIndex(index)}

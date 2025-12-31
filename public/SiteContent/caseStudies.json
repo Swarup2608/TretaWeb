@@ -70,6 +70,78 @@
       "uploadDate": "2024-12-01",
       "button": "Contact Us",
       "link": "/contact"
+    },
+    {
+      "id": 6,
+      "slug": "customer-experience-boost",
+      "title": "Boosting Customer Experience with AI Chatbots",
+      "description": "Implemented AI-powered chatbots to improve customer support and engagement.",
+      "fullDescription": "<p>We helped a retail client deploy AI chatbots, reducing response times and increasing customer satisfaction scores by 35%.</p>",
+      "image": "/images/case-study-6.jpg",
+      "labels": "AI, Customer Experience, Retail",
+      "uploadDate": "2024-12-20",
+      "button": "Contact Us",
+      "link": "/contact"
+    },
+    {
+      "id": 7,
+      "slug": "cloud-migration",
+      "title": "Seamless Cloud Migration for FinTech",
+      "description": "Migrated legacy systems to the cloud with zero downtime for a FinTech client.",
+      "fullDescription": "<p>Our team ensured a smooth transition to the cloud, improving scalability and reducing costs by 25%.</p>",
+      "image": "/images/case-study-7.jpg",
+      "labels": "Cloud, Migration, FinTech",
+      "uploadDate": "2024-12-18",
+      "button": "Contact Us",
+      "link": "/contact"
+    },
+    {
+      "id": 8,
+      "slug": "ecommerce-growth",
+      "title": "E-commerce Growth with Personalization",
+      "description": "Leveraged data analytics to personalize shopping experiences and boost sales.",
+      "fullDescription": "<p>Personalization strategies led to a 50% increase in repeat purchases for our e-commerce client.</p>",
+      "image": "/images/case-study-8.jpg",
+      "labels": "E-commerce, Personalization, Analytics",
+      "uploadDate": "2024-12-17",
+      "button": "Contact Us",
+      "link": "/contact"
+    },
+    {
+      "id": 9,
+      "slug": "energy-optimization",
+      "title": "Energy Optimization for Smart Buildings",
+      "description": "Deployed IoT sensors and analytics to reduce energy consumption in smart buildings.",
+      "fullDescription": "<p>IoT-driven insights resulted in a 40% reduction in energy costs for a property management firm.</p>",
+      "image": "/images/case-study-9.jpg",
+      "labels": "IoT, Energy, Smart Buildings",
+      "uploadDate": "2024-12-16",
+      "button": "Contact Us",
+      "link": "/contact"
+    },
+    {
+      "id": 10,
+      "slug": "remote-work-transformation",
+      "title": "Remote Work Transformation for Enterprises",
+      "description": "Enabled secure and productive remote work for a global enterprise.",
+      "fullDescription": "<p>Implemented secure remote access and collaboration tools, increasing productivity by 30%.</p>",
+      "image": "/images/case-study-10.jpg",
+      "labels": "Remote Work, Security, Collaboration",
+      "uploadDate": "2024-12-14",
+      "button": "Contact Us",
+      "link": "/contact"
+    },
+    {
+      "id": 11,
+      "slug": "sustainability-initiative",
+      "title": "Sustainability Initiative for Food Industry",
+      "description": "Guided a food company to launch a successful sustainability initiative.",
+      "fullDescription": "<p>Our sustainability roadmap helped the client reduce waste by 60% and improve brand reputation.</p>",
+      "image": "/images/case-study-11.jpg",
+      "labels": "Sustainability, Food, Environment",
+      "uploadDate": "2024-12-13",
+      "button": "Contact Us",
+      "link": "/contact"
     }
   ]
 }
