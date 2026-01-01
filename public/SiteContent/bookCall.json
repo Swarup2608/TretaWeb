@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Public",
+    "email": "Siva.Magiri@landus.ag",
+    "mobile": "1234567890",
+    "subject": "",
+    "description": "'/]",
+    "services": [
+      "Wealth & Finance",
+      "Performance Optimize"
+    ],
+    "createdAt": "2025-12-31T12:02:46.600Z"
+  },
+  {
+    "name": "name",
+    "email": "santhi.mantripragada@landus.ag",
+    "mobile": "1234567890",
+    "subject": "",
+    "description": "sad",
+    "services": [
+      "Wealth & Finance",
+      "Risk Assessment",
+      "Talent Strategy"
+    ],
+    "createdAt": "2025-12-31T11:59:34.088Z"
+  }
+]
