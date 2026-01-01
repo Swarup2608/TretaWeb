@@ -352,28 +352,24 @@ body {
 }
 
 /* Primary Button Styles */
-button[class*="bg-primary"],
 button.bg-primary,
 .bg-primary {
   background-color: var(--primary);
   transition: background-color 0.3s ease;
 }
 
-button[class*="bg-primary"]:hover,
 button.bg-primary:hover,
 .bg-primary:hover {
   filter: brightness(0.9);
 }
 
 /* Secondary Button Styles */
-button[class*="bg-secondary"],
 button.bg-secondary,
 .bg-secondary {
   background-color: var(--secondary);
   transition: background-color 0.3s ease;
 }
 
-button[class*="bg-secondary"]:hover,
 button.bg-secondary:hover,
 .bg-secondary:hover {
   filter: brightness(0.9);
@@ -1160,9 +1156,23 @@ button.bg-secondary:hover,
   }
 }
 
+.bg-background-light {
+  background-color: #f9fafb !important;
+}
+.dark .bg-background-light {
+  background-color: #111827 !important;
+}
+
+.text-background-light {
+  color: #111827 !important;
+}
+.dark .text-background-light {
+  color: #f9fafb !important;
+}
+
 /* Footer Section Styles - Colors Only */
 .footer-bg {
-  background: #ffffff !important;
+  background: #f2f2f2f2 !important;
 }
 
 .dark .footer-bg {

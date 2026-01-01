@@ -24,7 +24,7 @@
         ],
         "cta": {
             "label": "Get Appointment",
-            "link": "/contact"
+            "link": "/"
         }
     }
 }

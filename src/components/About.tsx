@@ -133,7 +133,7 @@ export default function About() {
 
                             {/* Stats at Bottom */}
                             {hasStats && (
-                                <div className="border-l-4 border-blue-600 pl-4 transition-all duration-300 hover:border-blue-700 hover:pl-6">
+                                <div className="border-l-4 border-primary pl-4 transition-all duration-300 hover:border-primary-dark hover:pl-6">
                                     <div className="text-6xl sm:text-7xl lg:text-8xl font-bold card-text mb-1 leading-none transition-all duration-300 hover:text-blue-600">
                                         {count}+
                                     </div>

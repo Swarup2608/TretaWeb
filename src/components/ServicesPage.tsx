@@ -61,11 +61,6 @@ export default function ServicesPage() {
                 </div>
             </section>
 
-            {/* Numbers Section with Darker Background */}
-            <section className="section-bg-darker">
-                <NumbersSection />
-            </section>
-
             {/* Services Grid Section */}
             <section className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
@@ -108,6 +103,13 @@ export default function ServicesPage() {
                         })}
                     </div>
                 </div>
+            </section>
+
+
+
+            {/* Numbers Section with Darker Background */}
+            <section className="section-bg-darker">
+                <NumbersSection />
             </section>
 
             {/* CTA Section */}
